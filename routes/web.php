@@ -5,6 +5,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\LoginController;
 
 // Import the authentication middleware
+use App\Http\Middleware\CheckTokenExpiry;
 use Illuminate\Auth\Middleware\Authenticate;
 
 // Define the routes
@@ -13,7 +14,7 @@ Route::get("/", [PageController::class, "home"]);
 Route::get("/login", [PageController::class, "login"]);
 
 // Define a group for authenticated routes
-Route::middleware([Authenticate::class])->group(function () {
+Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(function () {
     // Define the routes that require authentication
     // For example, the home route
     Route::get("/", [PageController::class, "home"]);

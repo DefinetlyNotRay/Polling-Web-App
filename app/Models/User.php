@@ -19,7 +19,17 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'password',
-        'role'
+        'api_token ',
+        'token_expiry'
+    ];
+
+      /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'token_expiry' => 'datetime', // Cast token_expiry to datetime
     ];
 
     /**
