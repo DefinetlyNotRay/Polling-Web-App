@@ -8,7 +8,7 @@
 
 ## TODO
 Frontend:
-- Login
+- Login ✓
 - Register
 - Home Page
 - Polls Page
@@ -16,7 +16,7 @@ Frontend:
 - User Settings Page
 
 Backend:
-- Login
+- Login ✓
 - Register
 - Polling System
 - Creating a Poll
@@ -24,12 +24,13 @@ Backend:
 - Changing Password
 
 Planning:
-Mock up
-design
-Erd
-Class Diagram
-Flowchart 
-Use Case
+- Mock up ✓
+- Erd ✓
+- Class Diagram ✓
+- Flowchart 
+- Use Case ✓
+- Activty Diagram
+- i forgot
 
 Testing:
 All of the functionality 
