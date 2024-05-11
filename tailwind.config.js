@@ -10,6 +10,7 @@ export default {
             colors: {
                 "background-black": "#211F1F",
                 success: "#5DFC5A",
+                nav: "#333131",
             },
         },
     },
