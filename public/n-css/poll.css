@@ -1,0 +1,191 @@
+/* Native thing */
+html, body {
+   width: 100vw;
+   height: 100%;
+   padding: 0;
+   margin: 0;
+}
+
+body {
+   background-color: #252525;
+   font-family: "Poppins", sans-serif;
+}
+
+p {
+   padding: 0;
+   margin: 0;
+}
+
+section {
+   padding-left: 5vw;
+   padding-right: 5vw;
+   padding-top: 5vh;
+   color: white;
+}
+
+.outline {
+   width: 100%;
+   height: 0.1em;
+   background-color: white;
+}
+
+/* Navbar */
+.bar {
+   height: 10vh;
+   width: 100vw;
+   background-color: #333131;
+   color: white;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.ce-bar {
+   display: flex;
+   font-size: 1em;
+   gap: 3vw;
+}
+
+.ce-bar p:nth-child(2) {
+   font-weight: bold;
+}
+
+.ce-bar p:hover, .ellipse:hover {
+   cursor: pointer;
+}
+
+.acc {
+   padding-right: 2vw;
+   right: 0;
+   position: absolute;
+}
+
+.ellipse {
+   width: 1.3vw;
+   height: 1.3vw;
+   border: 0.3vw solid white;
+   border-radius: 50%;
+   background-color: transparent;
+}
+
+/* Section - View Polls */
+
+#list-polls {
+   display: flex;
+   flex-direction: column;
+   gap: 2em;
+   height: 80vh;
+   overflow-y: auto;
+}
+
+#conport1 > p:nth-child(1) {
+   font-weight: bold;
+   font-size: 1.2em;
+}
+
+#polls > p:nth-child(1) {
+   font-weight: bold;
+   font-size: 1em;
+}
+
+#polls > p:nth-child(2) {
+   font-weight: 500;
+   font-size: 0.8em;
+   color: rgb(129, 129, 129);
+}
+
+.dot-poll {
+   width: 1.5em;
+   height: 1.5em;
+   background-color: white;
+   border-radius: 50%;
+}
+
+.dot-poll:hover {
+   cursor: pointer;
+}
+
+.flex-select-poll {
+   display: flex;
+   gap: 1em;
+}
+
+.select-poll {
+   display: flex;
+   flex-direction: column;
+   gap: 1em;
+   padding-top: 1em;
+}
+
+.select-poll p {
+   font-weight: 600;
+}
+
+.dot-click {
+   width: 1.2em;
+   height: 1.2em;
+   border: 0.19em solid rgb(255, 255, 255);
+   border-radius: 50%;
+   background-color: black;
+}
+
+#bar-select-poll {
+   display: none; /*Default 'flex'*/
+   width: 500px;
+   max-width: 50vw;
+   height: 1.5em;
+   background-color: white;
+}
+
+.bar-selected-poll {
+   height: 100%;
+   width: 200px;
+}
+
+.green {
+   background-color: #3BD138;
+}
+
+.red {
+   background-color: #E93232;
+}
+
+/* Section - Accounts */
+
+.con-info {
+   display: flex;
+   width: 100%;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.box-pass {
+   width: auto;
+   height: auto;
+   padding: 2em;
+   padding-top: 0.4em;
+   padding-bottom: 0.4em;
+   border: 0.1em solid #E93232;
+   background-color: transparent;
+}
+
+#conport2 {
+   font-weight: bold;
+   display: none; /*Default 'flex'*/
+   flex-direction: column;
+   gap: 5vh;
+}
+
+.username {
+   font-size: 1.3em;
+}
+
+.con-info p:nth-child(1) {
+   font-weight: 400;
+   font-size: 1em;
+}
+
+.con-info p:nth-child(2) {
+   font-weight: normal;
+   font-size: 1em;
+}
