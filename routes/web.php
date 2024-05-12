@@ -5,8 +5,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-<<<<<<< Updated upstream
-=======
 
 // Route for handling login form submission
 Route::post('/login/auth/login', [LoginController::class, "index"]);
@@ -23,4 +21,3 @@ Part of VGJR
 
 // For User - polls page
 Route::get('/poll', [PageController::class, "user_showpoll"]);
->>>>>>> Stashed changes
