@@ -1,29 +1,45 @@
-# Kelompok 2
+# This is a polling web app
 
-## Before Starting Use
-composer update
+## Before Starting run
+-   git pull origin main
+-   composer update
+
+## For Running the App
+
+-   php artisan serve
+-   npm run dev
 
 ## TODO
+
 Frontend:
-- Copy Mock Up
-- Add Styles
-- Add Functions
+
+-   Login ✓
+-   Register
+-   Home Page ✓
+-   Polls Page
+-   Create a Poll Page
+-   User Settings Page
 
 Backend:
-- API GET
-- API CREATE
-- API REGISTER
+
+-   Login ✓
+-   Register
+-   Polling System
+-   Creating a Poll
+-   Counting votes ✓
+-   Changing Password
 
 Planning:
-- Mock Up
-- ERD
-- Class Diagram
-- Flowchart 
-- Use case
+
+-   Mock up ✓
+-   Erd ✓
+-   Class Diagram ✓
+-   Use Case ✓
+-   Flowchart ✓
+-   Activty Diagram
+-   DFD
+-   Sequence Diagram
+-   Collaboration Diagram
 
 Testing:
-- Login
-- Register
-- Voting
-- Creating Poll
-- Validating Token
+All of the functionality
