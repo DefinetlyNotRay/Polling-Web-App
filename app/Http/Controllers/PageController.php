@@ -136,5 +136,13 @@ class PageController extends Controller
     public function login(){
         return view("login");
     }
+<<<<<<< Updated upstream
    
+=======
+
+    //Part of VGJR
+    public function user_showpoll() {
+        return view("user.poll");
+    }
+>>>>>>> Stashed changes
 }
