@@ -34,9 +34,9 @@ Planning:
 -   Erd ✓
 -   Class Diagram ✓
 -   Use Case ✓
--   Flowchart
--   Activty Diagram
--   DFD
+-   Flowchart ✓
+-   Activty Diagram ✓
+-   DFD ✓
 -   Sequence Diagram
 -   Collaboration Diagram
 
