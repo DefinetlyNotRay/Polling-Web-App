@@ -7,6 +7,7 @@
 ## For Running the App
 
 -   php artisan serve
+-   npm run dev
 
 ## TODO
 
