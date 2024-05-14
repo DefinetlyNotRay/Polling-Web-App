@@ -136,5 +136,49 @@ class PageController extends Controller
     public function login(){
         return view("login");
     }
+
+    //Part of VGJR
+    public function user_showpoll() {
+    $time = time();
+    $dateFormatted = date('m/d/Y, h:i:s', $time);
+
+    // "Example"
+    $poll = [
+        [
+            "title" => "Ayam apa Telur?",
+            "user" => "ahmad",
+            "timeout" => $dateFormatted,
+            "polls" => [
+                0 => "Ayam",
+                1 => "Telur"
+            ],
+            "votes" => [
+                0 => "3",
+                1 => "0"
+            ],
+            "status" => true
+        ],
+        [
+            "title" => "Bubur diaduk apa gak diaduk",
+            "user" => "amongus",
+            "timeout" => $dateFormatted,
+            "polls" => [
+                0 => "Apa Coba",
+                1 => "Gak"
+            ],
+            "votes" => [
+                0 => "19",
+                1 => "5"
+            ],
+            "status" => false
+        ]
+    ];    
+
+        return view("user.poll", ['poll' => $poll]);
+    }
+
+    public function admin_showpoll() {
+        return view("admin.poll");
+    }
    
 }

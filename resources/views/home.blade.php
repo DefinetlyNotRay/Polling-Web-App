@@ -19,11 +19,11 @@
                     @if(auth()->user()->role === 'admin')
                         {{-- User is an admin --}}
                         <li><a class="font-bold text-white" href="/home">Home</a></li>
-                        <li><a class="font-medium text-white" href="/polls/admin">Polls</a></li>
+                        <li><a class="font-medium text-white" href="{{route('adminpoll')}}">Polls</a></li>
                     @else
                         {{-- User is a normal user --}}
                         <li><a class="font-bold text-white" href="/home">Home</a></li>
-                        <li><a class="font-medium text-white" href="/polls">Polls</a></li>
+                        <li><a class="font-medium text-white" href="{{route('userpoll')}}">Polls</a></li>
                     @endif
                 @endif
 
