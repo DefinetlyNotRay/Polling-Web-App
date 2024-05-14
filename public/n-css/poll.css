@@ -189,3 +189,7 @@ section {
    font-weight: normal;
    font-size: 1em;
 }
+
+.box-pass-sec {
+   border: 0.1em solid #e9a332;
+} 

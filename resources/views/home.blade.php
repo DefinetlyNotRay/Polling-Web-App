@@ -23,7 +23,7 @@
                     @else
                         {{-- User is a normal user --}}
                         <li><a class="font-bold text-white" href="/home">Home</a></li>
-                        <li><a class="font-medium text-white" href="/polls">Polls</a></li>
+                        <li><a class="font-medium text-white" href="/poll">Polls</a></li>
                     @endif
                 @endif
 

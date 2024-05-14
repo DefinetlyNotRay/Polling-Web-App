@@ -77,6 +77,13 @@
       </div>
    </div>
    <div class="outline"></div>
+   <div class="con-info">
+      <p>Logout</p>
+      <div class="box-pass box-pass-sec">
+         <p>Logout</p>
+      </div>
+   </div>
+   <div class="outline"></div>
    </section>
 </body>
 </html>
