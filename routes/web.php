@@ -18,6 +18,14 @@ Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(functio
     // Define the routes that require authentication
     // For example, the home route
     Route::get("/", [PageController::class, "home"]);
+
+    /*
+    Part of VGJR
+    */
+
+    // For User - polls page
+    Route::get('/poll', [PageController::class, "user_showpoll"])->name('userpoll');
+    Route::get('/admin/poll', [PageController::class, "admin_showpoll"])->name('adminpoll');
 });
 
 // Route for handling login form submission
