@@ -36,45 +36,33 @@
    
    <!-- gw buatin design nya aja ya -->
    <!-- start of forEach -->
-   @php
-   $row = 0;
-   $column = 0;    
-   @endphp
-   @foreach($poll as $po)
-   @if($po['status'] == true)
    <div id="polls">
-   <p>{{$po['title']}}</p>
-   <p>Created by: {{$po['user']}} | Deadline: {{$po['timeout']}}</p>
+   <p>Ayam apa Telur?</p>
+   <p>Created by: (user) | Deadline: (timeout)</p>
 
    <!-- for Selecting Polls -->
    <div class="select-poll">
    <!-- forEach again -->
    <!-- Poll 1 -->
-   @foreach($po['polls'] as $selpol)
-   @php
-   $cbar = 1*($column+1)%2;
-   
-   @endphp
    <div class="flex-select-poll">
-      <div class="dot-poll" data-poll-index="{{$row}}" data-option-index="{{$column}}" onclick="trigger(this)"></div>
+      <div class="dot-poll" data-poll-index="0" data-option-index="0" onclick="trigger(this);"></div>
    <p>Ayam</p>
    </div>
    <div id="bar-select-poll" show-poll="0">
       <div class="bar-selected-poll red"></div>
    </div>
-   @php
-   $column++;
-   @endphp
-   @endforeach
+   <!-- Poll 2 -->
+   <div class="flex-select-poll">
+   <div class="dot-poll" data-poll-index="0" data-option-index="1" onclick="trigger(this);"></div>
+   <p>Telur</p>
+   </div>
+   <div id="bar-select-poll" show-poll="0">
+      <div class="bar-selected-poll green"></div>
+   </div>
+   </div>
    <!-- end forEach -->
    </div>
    <div class="outline"></div>
-   @elseif($po['status'] == false)
-   @endif
-   @php
-   $row++;
-   @endphp
-   @endforeach
    <!-- end of forEach -->
    </div>
    </section>

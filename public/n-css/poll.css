@@ -150,6 +150,10 @@ section {
    background-color: #E93232;
 }
 
+.poll-dis-enable {
+   display: flex;
+}
+
 /* Section - Accounts */
 
 .con-info {
