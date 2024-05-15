@@ -77,20 +77,19 @@
                    <div class="dot-poll" data-poll-index="0" data-option-index="0" onclick="trigger(this);"></div>
                    <li class="list-none">{{ $choice->choice }}</li>
                </div>
-           @endforeach
 
-           <!-- Render the progress bar based on the total percentage -->
-           @foreach($pollData['allChoices'] as $choice)
-           <div id="bar-select-poll"  show-poll="0">
-                   @foreach($finalOverallVoteCount[$pollData['poll']->id] as $choicess => $details)
-                       @if ($pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id)
-                               <div class="bar-selected-poll green" style="width:{{$details['percentage']}}%"></div>
-                       @else
-                               <div class="bar-selected-poll red" style="width:{{$details['percentage']}}%"></div>
-                       @endif
-                   @endforeach
-                  </div>
-                  @endforeach
+               <!-- Render the progress bar based on the total percentage -->
+               <div class="poll" id="bar-select-poll" show-poll="0">
+                   @php
+                       $isOnlyUserDivision = $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id;
+                   @endphp
+                   <div class="progress-bar" style="width: 100%; background-color: #ccc;">
+                       <div class="h-8 mb-{{ $isOnlyUserDivision ? '0' : '2' }}" style="width: {{ $totalPercentage }}%; background-color: {{ $isOnlyUserDivision ? '#3BD138' : '#E93232' }};">
+                           &nbsp;
+                       </div>
+                   </div>
+               </div>
+           @endforeach
        </div>
        <div class="outlines">&nbsp;</div>
    </div>
@@ -120,4 +119,5 @@
       <script src="{{asset('n-js/poll.js')}}"></script>
 
 </body>
+</html>
 </html>

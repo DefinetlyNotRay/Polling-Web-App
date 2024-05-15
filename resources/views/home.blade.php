@@ -85,13 +85,8 @@
                         $isMajorityChoice = isset($details['divisions'][$userDivision]) && $details['majority_choice'] === $choicess;
                         $isOnlyUserDivision = count($details['divisions']) === 1 && isset($details['divisions'][$userDivision]);
                     @endphp
-<<<<<<< Updated upstream
-                    <p class="font-bold text-lg " style="color:{{ $isOnlyUserDivision ? '#3BD138' : '#E93232' }}
+                    <p class="text-lg font-bold " style="color:{{ $isOnlyUserDivision ? '#3BD138' : '#E93232' }}
                     ">{{ $choicess }}: {{ $details['percentage'] }}%</p>
-=======
-                    <p class="text-lg font-bold" style="color:{{ $isOnlyUserDivision ? '#3BD138' : '#E93232' }}">{{ $choicess }}: {{ $details['percentage'] }}%</p>
-    
->>>>>>> Stashed changes
                     <div class="progress-bar" style="width: 100%; background-color: #ccc;">
                         <div class="h-8 mb-{{ $isOnlyUserDivision ? '0' : '2' }}" style="width: {{ $details['percentage'] }}%; background-color: {{ $isOnlyUserDivision ? '#3BD138' : '#E93232' }};">
                             &nbsp;
