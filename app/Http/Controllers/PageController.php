@@ -177,8 +177,69 @@ class PageController extends Controller
         return view("user.poll", ['poll' => $poll]);
     }
 
-    public function admin_showpoll() {
-        return view("admin.poll");
+    public function admin_showpoll()
+    {
+        $finalOverallVoteCount = $this->countMajorityVotes();
+        // Retrieve all votes for the authenticated user
+        $votes = Vote::where("user_id", auth()->user()->id)->get();
+        
+        // Retrieve all polls and eager load choices and user
+        $polls = Poll::with('choices', 'user')->get();
+        
+        $user = Auth::user();
+       
+        $vote = Vote::all();
+        // Initialize array to store poll data
+        $pollsData = [];
+        
+     
+
+        // Check if any votes exist for the user
+        if ($votes->isNotEmpty()) {
+            foreach ($votes as $vote) {
+                // Retrieve the corresponding poll for each vote
+                $poll = Poll::find($vote->poll_id);
+    
+                if ($poll) {
+                    // Retrieve all choices for the poll
+                    $allChoices = Choice::where("poll_id", $poll->id)->get();
+                    
+                    // Check if 'choice_id' attribute is not empty or null
+                    if (!empty($vote->choice_id)) {
+                        // Retrieve choice for each vote
+                        $voteChoice = Choice::find($vote->choice_id);
+                        if ($voteChoice) {
+                            $voteChoices = collect([$voteChoice]); // Wrap choice in a collection
+                        } else {
+                            $voteChoices = collect(); // Create an empty collection if choice is not found
+                        }
+                    } else {
+                        $voteChoices = collect(); // Create an empty collection if 'choice_id' attribute is empty or null
+                    }
+                    $totalCount = 0;
+                    foreach ($finalOverallVoteCount[$poll->id] as $choiceData) {
+                        $totalCount += $choiceData['count'];
+                       
+                    }
+                    $userVote = $votes->where('poll_id', $poll->id)->first();
+
+                    $pollsData[] = [
+                        'poll' => $poll,
+                        'choices' => $voteChoices,
+                        'allChoices' => $allChoices, // Include all choices for the poll
+                        'vote' => $vote,
+                        'userVote' => $userVote,
+
+                        'totalCount' => $totalCount // Add total count to poll data
+                    ];
+                }
+            }
+        }
+    
+        
+        return view("admin.poll", compact("pollsData", "user", "finalOverallVoteCount"));
     }
+    
+    
    
 }

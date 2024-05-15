@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Middleware\CheckIfAdmin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\LoginController;
 
 // Import the authentication middleware
+use App\Http\Controllers\LoginController;
 use App\Http\Middleware\CheckTokenExpiry;
 use Illuminate\Auth\Middleware\Authenticate;
 
@@ -27,6 +28,7 @@ Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(functio
     Route::get('/poll', [PageController::class, "user_showpoll"])->name('userpoll');
     Route::get('/admin/poll', [PageController::class, "admin_showpoll"])->name('adminpoll');
 });
+
 
 // Route for handling login form submission
 Route::post('/login/auth/login', [LoginController::class, "index"]);

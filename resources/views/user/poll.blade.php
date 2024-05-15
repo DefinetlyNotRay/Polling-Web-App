@@ -13,20 +13,38 @@
    <!-- Custom CSS -->
    <link rel="stylesheet" href="{{asset('n-css/poll.css')}}"/>
    <title>Poll</title>
+   @vite('resources/css/app.css')</head>
+
 </head>
 <script src="{{asset('n-js/poll.js')}}"></script>
 <body>
 
    <!-- Navbar-->
-   <div class="bar">
-      <div class="ce-bar">
-         <p onclick="window.location = '../'">Home</p>
-         <p onclick="window.location = '{{route('userpoll')}}">Polls</p>
+   <nav class="flex items-center justify-between py-5 bg-nav">
+      <div class="flex items-center">
+          <p class="ml-5">&nbsp;</p>
       </div>
-      <div class="acc">
-         <div class="ellipse" onclick="section()"></div>
+      <div class="flex justify-center flex-grow"> <!-- Center content -->
+          <ul class="flex gap-5">
+              @if(auth()->check()) {{-- Check if user is authenticated --}}
+              @if(auth()->user()->role === 'admin')
+                  {{-- User is an admin --}}
+                  <li><a class="font-medium text-white" href="/">Home</a></li>
+                  <li><a class="font-bold text-white" href="{{route('adminpoll')}}">Polls</a></li>
+              @else
+                  {{-- User is a normal user --}}
+                  <li><a class="font-medium text-white" href="/">Home</a></li>
+                  <li><a class="font-bold text-white" href="{{route('userpoll')}}">Polls</a></li>
+              @endif
+          @endif
+
+          </ul>
       </div>
-   </div>
+      <div class="flex items-center">
+          <button href="" class="mr-5" onclick="section()"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></button>
+      </div>
+      </div>
+  </nav>
 
    <!-- Section Container -->
    <!-- View Polls -->
@@ -68,7 +86,7 @@
    @endforeach
    <!-- end forEach -->
    </div>
-   <div class="outline"></div>
+   <div class="outlines">&nbsp;</div>
    @elseif($po['status'] == false)
    @endif
    @php
@@ -81,21 +99,22 @@
    <!-- Accounts -->
    <section id="conport2">
    <p class="username">Hello Username!</p>
-   <div class="outline"></div>
+   <div class="outlines">&nbsp;</div>
    <div class="con-info">
       <p>Change Password</p>
       <div class="box-pass">
          <p>Change</p>
       </div>
    </div>
-   <div class="outline"></div>
+   <div class="outlines">&nbsp;</div>
    <div class="con-info">
       <p>Logout</p>
       <div class="box-pass box-pass-sec">
          <p>Logout</p>
       </div>
    </div>
-   <div class="outline"></div>
+   <div class="outlines">&nbsp;</div>
    </section>
+   <script src="{{asset('n-js/poll.js')}}"></script>
 </body>
 </html>
