@@ -58,6 +58,7 @@
       </div>
    <p>Poll Name</p>
    <input type="text" onchange="testInput(this)" name="poll_name" required>
+   <textarea style="height: 5em; color: black;" name="poll_desc"></textarea>
    <p>Poll Deadline</p>
    <input type="date" onchange="testInput(this)" name="poll_deadline" required>
    <p>Poll Body</p>
