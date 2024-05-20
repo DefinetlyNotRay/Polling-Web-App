@@ -12,78 +12,166 @@
 
    <!-- Custom CSS -->
    <link rel="stylesheet" href="{{asset('n-css/poll.css')}}"/>
+
+   <!-- Custom Framework -->
+   @vite('resources/css/app.css')
    <title>Poll</title>
 </head>
 <script src="{{asset('n-js/poll.js')}}"></script>
 <body>
 
    <!-- Navbar-->
-   <div class="bar">
-      <div class="ce-bar">
-         <p onclick="window.location = '../'">Home</p>
-         <p onclick="window.location = '{{route('userpoll')}}">Polls</p>
-      </div>
-      <div class="acc">
-         <div class="ellipse" onclick="section()"></div>
-      </div>
-   </div>
+   <div class="">
+      <nav class="flex items-center justify-between py-5 bg-nav">
+          <div class="flex items-center">
+              <p class="ml-5">&nbsp;</p>
+          </div>
+          <div class="flex justify-center flex-grow"> <!-- Center content -->
+              <ul class="flex gap-5">
+                  @if(auth()->check()) {{-- Check if user is authenticated --}}
+                  @if(auth()->user()->role === 'admin')
+                      {{-- User is an admin --}}
+                      <li><a class="font-medium text-white" href="../">Home</a></li>
+                      <li><a class="font-bold text-white" href="{{route('adminpoll')}}">Polls</a></li>
+                  @else
+                      {{-- User is a normal user --}}
+                      <li><a class="font-medium text-white" href="../">Home</a></li>
+                      <li><a class="font-bold text-white" href="{{route('userpoll')}}">Polls</a></li>
+                  @endif
+              @endif
 
+              </ul>
+          </div>
+          <div class="flex items-center">
+              <a href="#" class="mr-5" onclick="section()"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></a>
+          </div>
+          </div>
+      </nav>
+  </div>
    <!-- Section Container -->
    <!-- View Polls -->
    <section id="conport1">
-   <p>Polls</p>
-   <div id="list-polls">
-   
-   <!-- gw buatin design nya aja ya -->
-   <!-- start of forEach -->
-   <div id="polls">
-   <p>Ayam apa Telur?</p>
-   <p>Created by: (user) | Deadline: (timeout)</p>
+      <div class="do-flex">
+      <p>Polls</p>
+      <button type="button" class="createpoll" onclick="window.location = '{{route('screatepoll')}}'">Create A Poll</button>
+      </div>
+      <div id="list-polls">
+  
+          @php
+              $row = 0;
+          @endphp
+  
+          @foreach($poll as $po)
+              @if($po['status'] == true)
+                  <div id="polls">
+                      <p>{{ $po['title'] }}</p>
+                      <p>Created by: {{ $po['user'] }} | Deadline: {{ $po['timeout'] }}</p>
+  
+                      <!-- Selecting Polls -->
+                      <div class="select-poll">
+                          @php
+                              $column = 0;
+                              $countvote = 0;
+                          @endphp
+  
+                          <!-- Iterate over poll options -->
+                          @foreach($po['polls'] as $selpol)
+                              @php
+                                  $cbar = 1 * ($column + 1) % 2;
+                                  $votes = intval($po['votes'][$column]); // Get votes for current poll option
+                                  $totalVotes = array_sum($po['votes']); // Total votes for all options
+                                  $percentage = ($totalVotes > 0) ? round(($votes / $totalVotes) * 100, 2) : 0;
+                                  $barClass = ($cbar === 0) ? 'green' : 'red';
+                              @endphp
+  
+                              <div class="flex-select-poll">
+                                  <div class="dot-poll" data-poll-index="{{ $row }}" data-option-index="{{ $column }}" onclick="trigger(this, {{$totalVotes}}, {{$votes}})"></div>
+                                  <p>{{ $selpol }}</p>
+                              </div>
+  
+                              <!-- Poll bar -->
+                              <div id="bar-select-poll" show-poll="{{ $row }}">
+                                  <div class="bar-selected-poll {{ $barClass }}" style="width: {{ $percentage }}%;" input-poll="{{$row}}-{{$column}}" >
+                                  </div>
+                              </div>
+  
+                              @php
+                                  $column++;
+                              @endphp
+                          @endforeach
+  
+                      </div>
+                      <div class="outlines"></div>
+                  </div>
+               @elseif($po['status'] == false)
+               <div id="polls">
+                  <p>{{ $po['title'] }}</p>
+                  <p>Created by: {{ $po['user'] }} | Deadline: {{ $po['timeout'] }}</p>
 
-   <!-- for Selecting Polls -->
-   <div class="select-poll">
-   <!-- forEach again -->
-   <!-- Poll 1 -->
-   <div class="flex-select-poll">
-      <div class="dot-poll" data-poll-index="0" data-option-index="0" onclick="trigger(this);"></div>
-   <p>Ayam</p>
-   </div>
-   <div id="bar-select-poll" show-poll="0">
-      <div class="bar-selected-poll red"></div>
-   </div>
-   <!-- Poll 2 -->
-   <div class="flex-select-poll">
-   <div class="dot-poll" data-poll-index="0" data-option-index="1" onclick="trigger(this);"></div>
-   <p>Telur</p>
-   </div>
-   <div id="bar-select-poll" show-poll="0">
-      <div class="bar-selected-poll green"></div>
-   </div>
-   </div>
-   <!-- end forEach -->
-   </div>
-   <div class="outline"></div>
-   <!-- end of forEach -->
-   </div>
+                  <!-- Selecting Polls -->
+                  <div class="select-poll">
+                      @php
+                          $column = 0;
+                          $countvote = 0;
+                      @endphp
+
+                      <!-- Iterate over poll options -->
+                      @foreach($po['polls'] as $selpol)
+                          @php
+                              $cbar = 1 * ($column + 1) % 2;
+                              $votes = intval($po['votes'][$column]); // Get votes for current poll option
+                              $totalVotes = array_sum($po['votes']); // Total votes for all options
+                              $percentage = ($totalVotes > 0) ? round(($votes / $totalVotes) * 100, 2) : 0;
+                              $barClass = ($cbar === 0) ? 'green' : 'red';
+                          @endphp
+
+                          <div class="flex-select-poll">
+                              <div class="dot-poll" data-poll-index="{{ $row }}" data-option-index="{{ $column }}"></div>
+                              <p>{{ $selpol }}</p>
+                          </div>
+
+                          <!-- Poll bar -->
+                          <div id="bar-select-poll" style="display: flex;" show-poll="{{ $row }}">
+                              <div class="bar-selected-poll {{ $barClass }}" style="width: {{ $percentage }}%;" input-poll="{{$row}}-{{$column}}">
+                                  {{ round($percentage) }}%
+                              </div>
+                          </div>
+
+                          @php
+                              $column++;
+                          @endphp
+                      @endforeach
+
+                  </div>
+                  <div class="outlines"></div>
+              </div>
+              @endif
+  
+              @php
+                  $row++;
+              @endphp
+          @endforeach
+  
+      </div>
    </section>
-   <!-- Accounts -->
+     <!-- Accounts -->
    <section id="conport2">
-   <p class="username">Hello Username!</p>
-   <div class="outline"></div>
+   <p class="username">Hello {{ucfirst(auth()->user()->username)}}!</p>
+   <div class="outlines"></div>
    <div class="con-info">
       <p>Change Password</p>
       <div class="box-pass">
          <p>Change</p>
       </div>
    </div>
-   <div class="outline"></div>
+   <div class="outlines"></div>
    <div class="con-info">
       <p>Logout</p>
-      <div class="box-pass box-pass-sec">
+      <div class="box-pass box-pass-sec" onclick="window.location = '{{route('logout')}}'">
          <p>Logout</p>
       </div>
    </div>
-   <div class="outline"></div>
+   <div class="outlines"></div>
    </section>
 </body>
 </html>

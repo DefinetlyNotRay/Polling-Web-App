@@ -8,6 +8,7 @@ use App\Models\Vote;
 use App\Models\Choice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class PageController extends Controller
 {
@@ -153,7 +154,7 @@ class PageController extends Controller
                 1 => "Telur"
             ],
             "votes" => [
-                0 => "3",
+                0 => "0",
                 1 => "0"
             ],
             "status" => true
@@ -178,7 +179,73 @@ class PageController extends Controller
     }
 
     public function admin_showpoll() {
-        return view("admin.poll");
+    $time = time();
+    $dateFormatted = date('m/d/Y, h:i:s', $time);
+
+    // "Example"
+    $poll = [
+        [
+            "title" => "Ayam apa Telur?",
+            "user" => "ahmad",
+            "timeout" => $dateFormatted,
+            "polls" => [
+                0 => "Ayam",
+                1 => "Telur"
+            ],
+            "votes" => [
+                0 => "0",
+                1 => "0"
+            ],
+            "status" => true
+        ],
+        [
+            "title" => "Bubur diaduk apa gak diaduk",
+            "user" => "amongus",
+            "timeout" => $dateFormatted,
+            "polls" => [
+                0 => "Apa Coba",
+                1 => "Gak"
+            ],
+            "votes" => [
+                0 => "19",
+                1 => "5"
+            ],
+            "status" => false
+        ]
+    ];    
+        return view("admin.poll", ['poll' => $poll]);
     }
-   
+ 
+    public function admin_createpoll(Request $request) {
+        //Retrieve the input data
+        $pollName = $request->input('poll_name');
+        $pollDeadline = $request->input('poll_deadline');
+        $pollBodies = $request->input('poll_body');
+
+        //Perform validation
+        $validated = $request->validate([
+            'poll_name' => 'required|string|max:60',
+            'poll_deadline' => 'required|date',
+            'poll_body' => 'required|array|min:1',
+            'poll_body.*' => 'required|string|max:40',
+        ]);
+
+        //Bagian buat poll (poll)
+        $pollName = $validated['poll_name'];
+        $pollDeadline = Carbon::parse($validated['poll_deadline'])->timestamp;
+        $pollBodies = $validated['poll_body'];
+
+        //Bagian buat pilihan (choices)
+        foreach ($pollBodies as $pollBody) {
+        }
+        error_log($pollBodies);
+
+        //Silahkan diubah, mau tambahin message atau apa kek
+        return redirect()->back();
+    }
+
+    public function admin_screatepoll() {
+        return view("admin.create_poll");
+    }
+ 
 }

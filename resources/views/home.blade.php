@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home</title>
     <!-- Link to your CSS file (assuming you have one) -->
+    <link rel="stylesheet" href="{{asset('n-css/home.css')}}">
     @vite('resources/css/app.css')</head>
 <body class="bg-background-black">
     <div class="">
