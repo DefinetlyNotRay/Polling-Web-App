@@ -250,7 +250,38 @@ class PageController extends Controller
         return view("admin.poll", compact("pollsData", "user", "finalOverallVoteCount"));
     }
     
-    
+    public function admin_createpoll(Request $request) {
+        //Retrieve the input data
+        $pollName = $request->input('poll_name');
+        $pollDeadline = $request->input('poll_deadline');
+        $pollBodies = $request->input('poll_body');
+
+        //Perform validation
+        $validated = $request->validate([
+            'poll_name' => 'required|string|max:60',
+            'poll_deadline' => 'required|date',
+            'poll_body' => 'required|array|min:1',
+            'poll_body.*' => 'required|string|max:40',
+        ]);
+
+        //Bagian buat poll (poll)
+        $pollName = $validated['poll_name'];
+        $pollDeadline = Carbon::parse($validated['poll_deadline'])->timestamp;
+        $pollBodies = $validated['poll_body'];
+
+        //Bagian buat pilihan (choices)
+        foreach ($pollBodies as $pollBody) {
+        }
+        error_log($pollBodies);
+
+        //Silahkan diubah, mau tambahin message atau apa kek
+        return redirect()->back();
+    }
+
+    public function admin_screatepoll() {
+        return view("admin.create_poll");
+    }
+
     
    
 

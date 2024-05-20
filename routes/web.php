@@ -11,29 +11,21 @@ use App\Http\Middleware\CheckTokenExpiry;
 use Illuminate\Auth\Middleware\Authenticate;
 
 // Define the routes
-Route::get("/", [PageController::class, "home"]);
 
 Route::get("/login", [PageController::class, "login"]);
 Route::get('/register', [PageController::class, "register"]);
-
-// Define a group for authenticated routes
 Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(function () {
-    // Define the routes that require authentication
-    // For example, the home route
-    Route::get("/", [PageController::class, "home"]);
 
-    /*
-    Part of VGJR
-    */
-
-    // For User - polls page
     Route::get('/poll', [PageController::class, "user_showpoll"])->name('userpoll');
-    // For Admin - polls page
+    Route::get("/", [PageController::class, "home"]);
+    Route::post('/poll/vote/user', [PollController::class, 'voteUser']);
+});
+// Define a group for authenticated routes
+Route::middleware([Authenticate::class, CheckTokenExpiry::class, CheckIfAdmin::class])->group(function () {
+  
     Route::get('/admin/poll', [PageController::class, "admin_showpoll"])->name('adminpoll');
     Route::post('/poll/vote', [PollController::class, 'vote']);
-    Route::post('/poll/vote/user', [PollController::class, 'voteUser']);
-
-    // Create Polls
+    
     Route::get('/admin/poll/create', [PageController::class, "admin_screatepoll"])->name('screatepoll');
     Route::post('/admin/poll/create', [PageController::class, "admin_createpoll"])->name('createpoll');
 });

@@ -24,10 +24,9 @@ class CheckIfAdmin
             return $next($request);
         }
 
-        // Log out the user if they are not authorized
-        Auth::logout();
+
 
         // Redirect to the login page or home page
-        return redirect('/login')->withErrors('You are not authorized to access this page.');
+        return redirect('/logout');
     }
 }

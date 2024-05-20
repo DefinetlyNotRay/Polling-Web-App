@@ -12,9 +12,6 @@
 
    <!-- Custom CSS -->
    <link rel="stylesheet" href="{{asset('n-css/poll.css')}}"/>
-
-   <!-- Custom Framework -->
-   @vite('resources/css/app.css')
    <title>Poll</title>
    @vite('resources/css/app.css')</head>
 
@@ -48,19 +45,16 @@
       </div>
   </nav>
 
-              </ul>
-          </div>
-          <div class="flex items-center">
-              <a href="#" class="mr-5" onclick="section()"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></a>
-          </div>
-          </div>
-      </nav>
-  </div>
    <!-- Section Container -->
    <!-- View Polls -->
    <section id="conport1">
-   <p>Polls</p>
-   <div id="list-polls">
+    <div class="do-flex">
+        <p>Polls</p>
+
+        <button type="button" class="createpoll" onclick="window.location = '{{route('screatepoll')}}'">Create A Poll</button>
+
+    </div>
+   <div id="list-polls" >
    
    <!-- gw buatin design nya aja ya -->
    <!-- start of forEach -->
@@ -70,9 +64,9 @@
        <p>Created by: {{ $pollData['poll']->user->username }} | Deadline: {{ $pollData['poll']->deadline }}</p>
    
        <!-- for Selecting Polls -->
-       <div class="select-poll">
+       <div class="select-poll" >
           @foreach ($pollData['allChoices'] as $choice)
-          <form id="vote-form" method="POST" action="/poll/vote">
+          <form id="vote-form" method="POST" action="/poll/vote/user">
             @csrf
             <input type="hidden" name="poll_id" id="poll_id">
             <input type="hidden" name="choice_id" id="choice_id">
@@ -99,12 +93,18 @@
                   <div class="h-100 mb-{{ $isUserVote ? '0' : '2' }}" style=" width: {{ $percentage }}%; background-color: {{ $isUserVote ? '#3BD138' : '#E93232' }};">
                      &nbsp;
                   </div>
+                  
                </div>
-
+               
             </form>
          </div>
 @endforeach
 </div>
+<div class="flex justify-end items-center">
+
+    <button type="button" class="bg-[#E93232] px-4 py-1 font-bold" onclick="window.location = '{{route('screatepoll')}}'">Delete</button>
+</div>
+
 <div class="mt-3 outlines">&nbsp;</div>
 </div>
 @endforeach
@@ -112,13 +112,11 @@
 
 
 
-
    </section>
-     <!-- Accounts -->
+   <!-- Accounts -->
    <section id="conport2">
-
-   <p class="username">Hello {{ucfirst(auth()->user()->username)}}!</p>
-   <div class="outlines"></div>
+   <p class="username">Hello {{ucfirst(Auth()->user()->username)}}!</p>
+   <div class="outlines">&nbsp;</div>
    <div class="con-info">
       <p>Change Password</p>
       <div class="box-pass">
@@ -126,17 +124,15 @@
       </div>
    </div>
    <div class="outlines">&nbsp;</div>
-
    <div class="con-info">
       <p>Logout</p>
-      <div class="box-pass box-pass-sec" onclick="window.location = '{{route('logout')}}'">
-         <p>Logout</p>
-      </div>
+      <div class="box-pass box-pass-sec">
+        <a href="/logout">
+            <p>Logout</p>
+         </a>      </div>
    </div>
    <div class="outlines">&nbsp;</div>
-   
    </section>
-      <script src="{{asset('n-js/poll.js')}}"></script>
       <script>
          function submitForm(radio) {
              // Get the data-poll-id of the selected radio button
@@ -222,6 +218,18 @@
 
             selectedRadio.disabled = false;
         }
+        function section() {
+    var port1 = document.getElementById('conport1');
+    var port2 = document.getElementById('conport2');
+    if(port2.style.display === 'none' || port2.style.display === '') {
+        port1.style.display = 'none';
+        port2.style.display = 'flex';
+    }
+    else {
+        port1.style.display = 'block';
+        port2.style.display = 'none';
+    }
+}
 
       </script>
 </body>

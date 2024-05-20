@@ -49,13 +49,8 @@
   </nav>
 
 
-              </ul>
-          </div>
-          <div class="flex items-center">
-              <a href="#" class="mr-5" onclick="section()"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></a>
-          </div>
-          </div>
-      </nav>
+
+   
   </div>
    <!-- Section Container -->
    <!-- View Polls -->
@@ -117,7 +112,7 @@
    </section>
      <!-- Accounts -->
    <section id="conport2">
-   <p class="username">Hello Username!</p>
+   <p class="username">Hello {{ucfirst(Auth()->user()->username)}}!</p>
    <div class="outlines">&nbsp;</div>
 
    <div class="con-info">
@@ -131,7 +126,9 @@
    <div class="con-info">
       <p>Logout</p>
       <div class="box-pass box-pass-sec">
-         <p>Logout</p>
+         <a href="/logout">
+            <p>Logout</p>
+         </a>
       </div>
    </div>
    <div class="outlines">&nbsp;</div>

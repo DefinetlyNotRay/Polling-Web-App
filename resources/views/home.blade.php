@@ -107,10 +107,44 @@
             <p>No polls found for this user.</p>
         @endif
     </div>
-    
+    <section id="conport2">
+        <p class="username">Hello {{ucfirst(Auth()->user()->username)}}!</p>
+        <div class="outlines">&nbsp;</div>
+     
+        <div class="con-info">
+           <p>Change Password</p>
+           <div class="box-pass">
+              <p>Change</p>
+           </div>
+        </div>
+        <div class="outlines">&nbsp;</div>
+     
+        <div class="con-info">
+           <p>Logout</p>
+           <div class="box-pass box-pass-sec">
+            <a href="/logout">
+                <p>Logout</p>
+             </a>           </div>
+        </div>
+        <div class="outlines">&nbsp;</div>
+     
+        </section>
     
         <script src="{{asset('n-js/poll.js')}}"></script>
-
+        <script>
+              function section() {
+    var port1 = document.getElementById('conport1');
+    var port2 = document.getElementById('conport2');
+    if(port2.style.display === 'none' || port2.style.display === '') {
+        port1.style.display = 'none';
+        port2.style.display = 'flex';
+    }
+    else {
+        port1.style.display = 'block';
+        port2.style.display = 'none';
+    }
+}
+        </script>
 </body>
 </html>
 

@@ -56,21 +56,18 @@ function trigger(selectedRadio) {
    var curvote = currentvote + 1;
    var calcvote = parseInt((curvote / convote) * 100);
    inputpoll[0].style.width = calcvote + '%';
-}
+
 
 function section() {
     var port1 = document.getElementById('conport1');
     var port2 = document.getElementById('conport2');
-    var port3 = document.getElementById('conport3');
     if(port2.style.display === 'none' || port2.style.display === '') {
         port1.style.display = 'none';
         port2.style.display = 'flex';
-        port3.style.display = 'none';
     }
     else {
         port1.style.display = 'block';
         port2.style.display = 'none';
-        port3.style.display = 'none';
     }
 }
 
