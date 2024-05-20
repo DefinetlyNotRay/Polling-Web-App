@@ -28,14 +28,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Division::class);
     }
-    public function votes()
-    {
-        return $this->hasMany(Vote::class);
-    }
-    public function choices()
-    {
-        return $this->hasMany(Choice::class);
-    }
 
       /**
      * The attributes that should be cast.

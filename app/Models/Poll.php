@@ -27,8 +27,4 @@ public function choices()
 {
     return $this->hasMany(Choice::class);
 }
-public function user()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
 }

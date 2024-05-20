@@ -1,9 +1,8 @@
 <?php
 
-use App\Http\Middleware\CheckIfAdmin;
 use Illuminate\Foundation\Application;
-use App\Http\Middleware\CheckTokenExpiry;
 use App\Http\Middleware\CheckTokenExpiration;
+use App\Http\Middleware\CheckTokenExpiry;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -29,7 +28,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->append(CheckTokenExpiration::class);
         $middleware->append(CheckTokenExpiry::class);
-
 
     })
     ->withExceptions(function (Exceptions $exceptions) {
