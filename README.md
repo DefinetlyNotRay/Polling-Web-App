@@ -16,7 +16,7 @@ Frontend:
 -   Login ✓
 -   Register
 -   Home Page ✓
--   Polls Page ✓
+-   Polls Page
 -   Create a Poll Page
 -   User Settings Page
 
@@ -38,8 +38,8 @@ Planning:
 -   Flowchart ✓
 -   Activty Diagram ✓
 -   DFD ✓
--   Sequence Diagram ✓
--   Collaboration Diagram ✓
+-   Sequence Diagram
+-   Collaboration Diagram
 
 Testing:
--   All of the functionality
+All of the functionality

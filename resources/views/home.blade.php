@@ -10,7 +10,6 @@
     <!-- Link to your CSS file (assuming you have one) -->
     @vite('resources/css/app.css')
 </head>
-    
 <body class="bg-background-black">
     <div class="">
         <nav class="flex items-center justify-between py-5 bg-nav">

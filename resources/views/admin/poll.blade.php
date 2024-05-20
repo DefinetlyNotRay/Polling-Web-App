@@ -12,9 +12,6 @@
 
    <!-- Custom CSS -->
    <link rel="stylesheet" href="{{asset('n-css/poll.css')}}"/>
-
-   <!-- Custom Framework -->
-   @vite('resources/css/app.css')
    <title>Poll</title>
    @vite('resources/css/app.css')</head>
 
@@ -48,14 +45,6 @@
       </div>
   </nav>
 
-              </ul>
-          </div>
-          <div class="flex items-center">
-              <a href="#" class="mr-5" onclick="section()"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></a>
-          </div>
-          </div>
-      </nav>
-  </div>
    <!-- Section Container -->
    <!-- View Polls -->
    <section id="conport1">
@@ -112,13 +101,11 @@
 
 
 
-
    </section>
-     <!-- Accounts -->
+   <!-- Accounts -->
    <section id="conport2">
-
-   <p class="username">Hello {{ucfirst(auth()->user()->username)}}!</p>
-   <div class="outlines"></div>
+   <p class="username">Hello Username!</p>
+   <div class="outlines">&nbsp;</div>
    <div class="con-info">
       <p>Change Password</p>
       <div class="box-pass">
@@ -126,15 +113,13 @@
       </div>
    </div>
    <div class="outlines">&nbsp;</div>
-
    <div class="con-info">
       <p>Logout</p>
-      <div class="box-pass box-pass-sec" onclick="window.location = '{{route('logout')}}'">
+      <div class="box-pass box-pass-sec">
          <p>Logout</p>
       </div>
    </div>
    <div class="outlines">&nbsp;</div>
-   
    </section>
       <script src="{{asset('n-js/poll.js')}}"></script>
       <script>
