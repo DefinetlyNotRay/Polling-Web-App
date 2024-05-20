@@ -132,7 +132,6 @@ section {
 }
 
 #bar-select-poll {
-    display: none; /*Default 'flex'*/
     width: 500px;
     max-width: 50vw;
     height: 1.5em;
