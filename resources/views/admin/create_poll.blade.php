@@ -64,6 +64,7 @@
    <div id="body_poll">
    <input type="text" onchange="testInput(this, false, 0, false)"  name="poll_body" placeholder="Write a option.." required>
    <input type="text" onchange="testInput(this, true, 1, false)" name="poll_body" placeholder="Write a option.." required>
+   <!-- Automatic Create's Another -->
    </div>
    <input type="submit" name="Submit" id="submitcrpoll">
    </div>
