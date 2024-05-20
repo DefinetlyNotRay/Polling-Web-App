@@ -58,6 +58,8 @@
       </div>
    <p>Poll Name</p>
    <input type="text" onchange="testInput(this)" name="poll_name" required>
+   <p>Poll Description</p>
+
    <textarea style="height: 5em; color: black;" name="poll_desc"></textarea>
    <p>Poll Deadline</p>
    <input type="date" onchange="testInput(this)" name="poll_deadline" required>
@@ -65,12 +67,12 @@
    <div id="body_poll" class="relative">
     <div class="relative">
 
-        <input type="text" onchange="testInput(this, false, 0, false)"  name="poll_body" placeholder="Write a option.." required>
+        <input type="text" onchange="testInput(this, false, 0, false)"  name="poll_body[]" placeholder="Write a option.." required>
         <button style="" class="absolute  text-[#272525] right-5 top-2 text-xl">-</button>
     </div>
     <div class="relative">
 
-        <input type="text" onchange="testInput(this, true, 1, false)"  name="poll_body" placeholder="Write a option.." required>
+        <input type="text" onchange="testInput(this, true, 1, false)"  name="poll_body[]" placeholder="Write a option.." required>
         <button style="" class="absolute  text-[#272525] right-5 top-2 text-xl">-</button>
     </div>
   
@@ -127,10 +129,10 @@
             newDiv.setAttribute('id', 'div1');
             newP.setAttribute('id','p1');
             newInput.type = 'text';
-            newInput.name = 'poll_body';
+            newInput.name = `poll_body[]`;
             newInput.className = 'inputforpoll';
             newInput.placeholder = 'Write an option..';
-            newInput.required = true;
+            newInput.required = false;
             let tonumber = number + 1; // Increment number
             newInput.setAttribute('onchange', 'testInput(this, true, ' + tonumber +', true)');
             

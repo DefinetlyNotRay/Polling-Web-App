@@ -252,31 +252,39 @@ class PageController extends Controller
     
     public function admin_createpoll(Request $request) {
         //Retrieve the input data
-        $pollName = $request->input('poll_name');
-        $pollDeadline = $request->input('poll_deadline');
-        $pollBodies = $request->input('poll_body');
-
+        $pollName = $request->input('title');
+        $pollDeadline = $request->input('deadline');
+        // $pollBodies = $request->input('poll_body');
+        $lastPoll = Poll::latest()->first();
         //Perform validation
         $validated = $request->validate([
-            'poll_name' => 'required|string|max:60',
+            'poll_title' => 'required|string|max:60',
+            'poll_desc' => 'required',
             'poll_deadline' => 'required|date',
-            'poll_body' => 'required|array|min:1',
-            'poll_body.*' => 'required|string|max:40',
+            'poll_body' => 'array|min:1',
+            'poll_body.*' => 'string|max:255',
+
         ]);
 
-        //Bagian buat poll (poll)
-        $pollName = $validated['poll_name'];
-        $pollDeadline = Carbon::parse($validated['poll_deadline'])->timestamp;
-        $pollBodies = $validated['poll_body'];
-
-        //Bagian buat pilihan (choices)
-        foreach ($pollBodies as $pollBody) {
+        
+        $user = Auth()->user()->id;
+        
+        Poll::create(['title'=>$validated['poll_title'],'description'=>$validated['poll_desc'],'deadline'=>$validated['poll_deadline'],'created_by'=>$user]);
+        foreach ($validatedData['poll_body'] as $option) {
+            Choice::create([
+                'poll_id'=> $lastPoll->id,
+                'choices' => $option
+            ]);
+           
         }
-        error_log($pollBodies);
+        
+
 
         //Silahkan diubah, mau tambahin message atau apa kek
         return redirect()->back();
     }
+
+
 
     public function admin_screatepoll() {
         return view("admin.create_poll");
