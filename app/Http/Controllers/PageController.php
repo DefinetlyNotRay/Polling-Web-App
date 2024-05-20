@@ -9,6 +9,7 @@ use App\Models\Choice;
 use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class PageController extends Controller
 {
@@ -174,6 +175,7 @@ class PageController extends Controller
             }
             $userVote = Vote::where("user_id", $user->id)->where("poll_id", $poll->id)->first();
 
+
     
             // Calculate total vote count for the poll
             $totalCount = 0;
@@ -251,4 +253,5 @@ class PageController extends Controller
     
     
    
+
 }

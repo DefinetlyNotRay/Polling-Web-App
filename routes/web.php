@@ -28,9 +28,14 @@ Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(functio
 
     // For User - polls page
     Route::get('/poll', [PageController::class, "user_showpoll"])->name('userpoll');
+    // For Admin - polls page
     Route::get('/admin/poll', [PageController::class, "admin_showpoll"])->name('adminpoll');
     Route::post('/poll/vote', [PollController::class, 'vote']);
     Route::post('/poll/vote/user', [PollController::class, 'voteUser']);
+
+    // Create Polls
+    Route::get('/admin/poll/create', [PageController::class, "admin_screatepoll"])->name('screatepoll');
+    Route::post('/admin/poll/create', [PageController::class, "admin_createpoll"])->name('createpoll');
 });
 
 
@@ -38,7 +43,8 @@ Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(functio
 Route::post('/login/auth/login', [LoginController::class, "index"]);
 Route::post('/login/auth/register', [LoginController::class, "indexRegister"]);
 
-Route::get('/logout', [LoginController::class, "logout"]);
+
+Route::get('/logout', [LoginController::class, "logout"])->name('logout');
 
 // Route for redirecting users to the login page if they are not authenticated
 Route::get('/unauthenticated', function () {
