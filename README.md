@@ -1,7 +1,7 @@
 # This is a polling web app
 
 ## Before Starting run
--   git pull origin main
+
 -   composer update
 
 ## For Running the App
@@ -16,7 +16,7 @@ Frontend:
 -   Login ✓
 -   Register
 -   Home Page ✓
--   Polls Page
+-   Polls Page ✓
 -   Create a Poll Page
 -   User Settings Page
 
@@ -36,10 +36,10 @@ Planning:
 -   Class Diagram ✓
 -   Use Case ✓
 -   Flowchart ✓
--   Activty Diagram
--   DFD
--   Sequence Diagram
--   Collaboration Diagram
+-   Activty Diagram ✓
+-   DFD ✓
+-   Sequence Diagram ✓
+-   Collaboration Diagram ✓
 
 Testing:
-All of the functionality
+-   All of the functionality
