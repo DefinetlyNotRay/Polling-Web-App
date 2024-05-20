@@ -1,7 +1,7 @@
 # This is a polling web app
 
 ## Before Starting run
--   git pull origin main
+
 -   composer update
 
 ## For Running the App

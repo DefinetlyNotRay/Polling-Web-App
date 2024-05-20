@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckIfAdmin
@@ -18,13 +19,15 @@ class CheckIfAdmin
         
         $user = Auth::user();
 
-        if ($user->role = "admin") {
-          return $next($request);
-        }else{
-            return redirect('/login')->with('error', 'You are not an Admin please login to an Admin account');
-
+        // Check if the user is authenticated and has 'admin' or 'regular' role
+        if ($user && $user->role === 'admin') {
+            return $next($request);
         }
 
-        return $next($request);
+        // Log out the user if they are not authorized
+        Auth::logout();
+
+        // Redirect to the login page or home page
+        return redirect('/login')->withErrors('You are not authorized to access this page.');
     }
 }
