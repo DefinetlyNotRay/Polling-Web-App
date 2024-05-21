@@ -12,8 +12,14 @@ use Illuminate\Auth\Middleware\Authenticate;
 
 // Define the routes
 
+
+Route::get("/login", [PageController::class, "login"])->name('login');
+
+// Define a group for authenticated routes
+=
 Route::get("/login", [PageController::class, "login"]);
 Route::get('/register', [PageController::class, "register"]);
+
 Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(function () {
 
     Route::get('/poll', [PageController::class, "user_showpoll"])->name('userpoll');
@@ -42,3 +48,6 @@ Route::get('/logout', [LoginController::class, "logout"])->name('logout');
 Route::get('/unauthenticated', function () {
     return redirect('/login');
 })->name('login');
+
+Route::get('/register', [PageController::class, "register"])->name('register');
+Route::post('/register/post', [PageController::class, "form_register"])->name('formregister');
