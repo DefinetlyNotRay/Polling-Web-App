@@ -74,14 +74,13 @@
             <input type="hidden" name="choice_id" id="choice_id">
         
             <div class="flex-select-poll">
-                {{$choice->poll_id}}
-                <input class="dot-poll" type="radio" name="vote" data-poll-id="{{$choice->poll_id}}" data-choice-id="{{$choice->id}}" required onclick="submitForm(this)" {{ $pollData['hasVoted'] ? 'disabled' : '' }} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
+                <input class="dot-poll" type="radio" name="vote" data-poll-id="{{$choice->poll_id}}" data-choice-id="{{$choice->id}}" required onclick="submitForm(this)" {{$pollData['hasVoted'] ? 'disabled' : ($pollData['deadlineOver'] ? 'disabled' : '')               }} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
                 <li class="list-none">{{ $choice->choice }}</li>
             </div>
               
               <!-- Render the progress bar based on the percentage -->
 
-               <div id="bar-select-poll" class="mt-2" style="display:{{$pollData['hasVoted'] ? 'flex':'none'}} !important;" show-poll="{{$pollData['poll']->id}}">
+               <div id="bar-select-poll" class="mt-2" style="display:{{$pollData['hasVoted'] ? 'flex': ($pollData['deadlineOver'] ? 'flex' : 'none')}} !important;" show-poll="{{$pollData['poll']->id}}">
                    @php
                        $isUserVote = $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id;
                        $percentage = 0;

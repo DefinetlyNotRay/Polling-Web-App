@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -9,6 +8,11 @@ class CheckTokenExpiry
 {
     public function handle($request, Closure $next)
     {
+        // Check if the request method is GET
+        if ($request->isMethod('get')) {
+            return $next($request);
+        }
+
         $user = Auth::user();
 
         if ($user && $user->token_expiry && $user->token_expiry->isPast()) {

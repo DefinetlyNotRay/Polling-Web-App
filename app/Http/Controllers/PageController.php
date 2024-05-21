@@ -149,6 +149,8 @@ class PageController extends Controller
 
     //Part of VGJR
     public function user_showpoll() {
+
+
         $finalOverallVoteCount = $this->countMajorityVotes();
         $user = auth()->user();
         
@@ -161,7 +163,7 @@ class PageController extends Controller
         foreach ($polls as $poll) {
             // Retrieve all choices for the poll
             $allChoices = $poll->choices;
-    
+            
             // Check if the user has voted on this poll
             $userVote = Vote::where("user_id", $user->id)->where("poll_id", $poll->id)->first();
     
@@ -183,6 +185,15 @@ class PageController extends Controller
                 foreach ($finalOverallVoteCount[$poll->id] as $choiceData) {
                     $totalCount += $choiceData['count'];
                 }
+                
+                $deadlineOver = false;
+                $deadline = Carbon::parse($poll->deadline);
+
+                if($deadline->isPast()) {
+                    $deadlineOver = true;
+                }
+                
+
             }
     
             // Add the poll data to the array
@@ -192,7 +203,8 @@ class PageController extends Controller
                 'allChoices' => $allChoices,
                 'userVote' => $userVote,
                 'totalCount' => $totalCount,
-                'hasVoted' => $userVote ? true : false
+                'hasVoted' => $userVote ? true : false,
+                'deadlineOver' => $deadlineOver
             ];
         }
     
@@ -251,37 +263,38 @@ class PageController extends Controller
     }
     
     public function admin_createpoll(Request $request) {
-        //Retrieve the input data
-        $pollName = $request->input('title');
-        $pollDeadline = $request->input('deadline');
-        // $pollBodies = $request->input('poll_body');
-        $lastPoll = Poll::latest()->first();
-        //Perform validation
+        // Retrieve the input data
         $validated = $request->validate([
-            'poll_title' => 'required|string|max:60',
-            'poll_desc' => 'required',
-            'poll_deadline' => 'required|date',
+            'title' => 'required|string|max:60',
+            'description' => 'required',
+            'deadline' => 'required|date',
             'poll_body' => 'array|min:1',
             'poll_body.*' => 'string|max:255',
-
         ]);
-
+    
+        // Combine the date from the form input with the current time
+        $deadlineDateTime = Carbon::createFromFormat('Y-m-d', $validated['deadline'])->setTime(23, 59, 59);
         
-        $user = Auth()->user()->id;
-        
-        Poll::create(['title'=>$validated['poll_title'],'description'=>$validated['poll_desc'],'deadline'=>$validated['poll_deadline'],'created_by'=>$user]);
-        foreach ($validatedData['poll_body'] as $option) {
-            Choice::create([
-                'poll_id'=> $lastPoll->id,
-                'choices' => $option
-            ]);
-           
-        }
-        
-
-
-        //Silahkan diubah, mau tambahin message atau apa kek
-        return redirect()->back();
+        // Create the poll
+        $user = auth()->user()->id;
+        Poll::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'deadline' => $deadlineDateTime, // Use the combined date and current time
+            'created_by' => $user
+        ]);
+    
+        $poll = Poll::latest()->get();
+        // // Create choices for the poll
+        // foreach ($validated['poll_body'] as $option) {
+        //     Choice::create([
+        //         'choices' => $option,
+        //         'poll_id'=> $poll->id
+        //     ]);
+        // }
+    
+        // Redirect back with success message
+        return redirect("/");
     }
 
 

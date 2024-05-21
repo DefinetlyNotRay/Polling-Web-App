@@ -22,12 +22,12 @@ Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(functio
 });
 // Define a group for authenticated routes
 Route::middleware([Authenticate::class, CheckTokenExpiry::class, CheckIfAdmin::class])->group(function () {
-  
     Route::get('/admin/poll', [PageController::class, "admin_showpoll"])->name('adminpoll');
     Route::post('/poll/vote', [PollController::class, 'vote']);
     
     Route::get('/admin/poll/create', [PageController::class, "admin_screatepoll"])->name('screatepoll');
-    Route::post('/admin/poll/create', [PageController::class, "admin_createpoll"])->name('createpoll');
+    Route::post('/create/poll', [PageController::class, "admin_createpoll"])->name('createpoll');
+    Route::get('/poll/delete/{id}', [PollController::class, "delete"]);
 });
 
 

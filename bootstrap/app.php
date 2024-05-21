@@ -27,7 +27,6 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
             \Illuminate\Auth\Middleware\Authorize::class,
         ]);
-        $middleware->append(CheckTokenExpiration::class);
         $middleware->append(CheckTokenExpiry::class);
 
 

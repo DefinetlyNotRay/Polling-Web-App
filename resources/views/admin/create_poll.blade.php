@@ -48,8 +48,8 @@
           </div>
       </nav>
   </div>
-  <section id="conport1" class="justify-center items-center flex">
-   <form action="{{route('createpoll')}}" method="POST">
+  <section id="conport1" class="flex items-center justify-center">
+   <form action="/create/poll" method="POST">
    @csrf
    <p id="textcport3">Create A Poll</p>
    <div class="container-2">
@@ -57,12 +57,12 @@
       <p id="text-error-trim">Test</p>
       </div>
    <p>Poll Name</p>
-   <input type="text" onchange="testInput(this)" name="poll_name" required>
+   <input type="text" onchange="testInput(this)" name="title" required>
    <p>Poll Description</p>
 
-   <textarea style="height: 5em; color: black;" name="poll_desc"></textarea>
+   <textarea style="height: 5em; color: black;" name="description"></textarea>
    <p>Poll Deadline</p>
-   <input type="date" onchange="testInput(this)" name="poll_deadline" required>
+   <input type="date" onchange="testInput(this)" name="deadline" required>
    <p>Poll Body</p>
    <div id="body_poll" class="relative">
     <div class="relative">

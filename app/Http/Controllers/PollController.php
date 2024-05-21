@@ -128,4 +128,10 @@ return redirect("/poll");
 
 
 }
+public function delete(int $id){
+    Vote::where('poll_id',$id)->delete();
+    Choice::where('poll_id', $id)->delete();
+    Poll::where('id', $id)->delete();
+    return redirect("/admin/poll");
+}
 }

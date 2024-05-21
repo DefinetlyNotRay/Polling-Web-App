@@ -19,7 +19,6 @@ class Poll extends Model
         "description",
         "deadline",
         "created_by",
-        "deleted_at"
 
     ];
     // In Poll model
