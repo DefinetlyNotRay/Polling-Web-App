@@ -44,7 +44,13 @@ class LoginController extends Controller
             'username' => 'The provided credentials do not match our records.',
         ]);
     }
-    
+    public function indexRegister(Request $request){
+        $creds = $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+            'devision' => 'required',
+        ]);
+    }
     public function logout(Request $request){
         $user = Auth::user();
         $user->api_token = null;
@@ -55,9 +61,9 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
         return redirect('/login');
     }
-    public function indexRegister(Request $request){
-       
 
-    }
     
+    public function indexReg(Request $request) {
+        return view('views.register');
+    }
 }
