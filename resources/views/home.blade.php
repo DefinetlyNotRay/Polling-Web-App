@@ -131,7 +131,11 @@
      
         </section>
         <script>
-
+@if(session('success'))
+    setTimeout(function() {
+        alert('{{session('success')}}');        
+    }, 1000);
+@endif
     function tochangepass() {
         let confirmChange = confirm('Do you want to change the password?');
         if (!confirmChange) {

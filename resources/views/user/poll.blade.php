@@ -43,7 +43,7 @@
           </ul>
       </div>
       <div class="flex items-center">
-         <button href="" class="mr-5" onclick="section()"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></button>
+         <button href="" class="mr-5" onclick="dosection()"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></button>
       </div>
       </div>
   </nav>
@@ -227,12 +227,12 @@
                             selectedRadio.checked = true;
                             selectedRadio.disabled = true;
                             showProgressBar(pollId);
-                            }
                         }
                     }
                 }
             });
         });
+    }
 
         function trigger(selectedRadio) {
             const pollId = selectedRadio.getAttribute("data-poll-id");
@@ -244,9 +244,7 @@
 
             selectedRadio.disabled = false;
         }
-
-        
-        function section() {
+        function dosection() {
     var port1 = document.getElementById('conport1');
     var port2 = document.getElementById('conport2');
     if(port2.style.display === 'none' || port2.style.display === '') {
@@ -258,7 +256,6 @@
         port2.style.display = 'none';
     }
 }
-      </script>
+</script>
 </body>
-</html>
 </html>

@@ -38,4 +38,12 @@
     }, 1000);
 </script>
 @endif
+@if(session('success'))
+<script>
+    setTimeout(function() {
+        alert('{{session('success')}}');        
+    }, 1000);
+</script>
+@endif
+
 </html>
