@@ -61,12 +61,9 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
         return redirect('/login');
     }
-<<<<<<< Updated upstream
-=======
-    public function indexRegister(Request $request){
-        return view('views.register');
-       
-    }
->>>>>>> Stashed changes
+
     
+    public function indexReg(Request $request) {
+        return view('views.register');
+    }
 }

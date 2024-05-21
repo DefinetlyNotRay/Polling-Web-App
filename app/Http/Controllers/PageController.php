@@ -136,8 +136,6 @@ class PageController extends Controller
     public function login(){
         return view("login");
     }
-<<<<<<< Updated upstream
-=======
 
     public function register() {
         $do = Division::get();
@@ -166,6 +164,5 @@ class PageController extends Controller
             return redirect()->route('login');
         }
     }
->>>>>>> Stashed changes
    
 }

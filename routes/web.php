@@ -11,11 +11,7 @@ use Illuminate\Auth\Middleware\Authenticate;
 // Define the routes
 Route::get("/", [PageController::class, "home"]);
 
-<<<<<<< Updated upstream
-Route::get("/login", [PageController::class, "login"]);
-=======
 Route::get("/login", [PageController::class, "login"])->name('login');
->>>>>>> Stashed changes
 
 // Define a group for authenticated routes
 Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(function () {
