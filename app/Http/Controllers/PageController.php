@@ -6,6 +6,7 @@ use App\Models\Poll;
 use App\Models\User;
 use App\Models\Vote;
 use App\Models\Choice;
+use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
