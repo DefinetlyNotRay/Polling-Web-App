@@ -27,4 +27,11 @@
    </div>
     
 </body>
+@if(session('username'))
+<script>
+    setTimeout(function() {
+        alert('{{session('username')}}');        
+    }, 1000);
+</script>
+@endif
 </html>

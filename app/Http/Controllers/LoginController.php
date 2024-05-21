@@ -35,14 +35,12 @@ class LoginController extends Controller
             $user->save();
     
             // Store token in cookie
-            $response = redirect('/')->withCookie(cookie('user_token', $token, 24 * 60)); // 24 hours
+            $response = redirect('/')->withCookie(cookie('user_token', $token, 24 * 60))->with('success', 'Login succeeded.'); // 24 hours
     
             return $response;
         }
     
-        return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
-        ]);
+        return back()->with('username', 'The provided credentials do not match our records.');
     }
     
     public function logout(Request $request){

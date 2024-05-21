@@ -104,6 +104,69 @@
         @endif
 
     </div>
+    <section id="conport2">
+        <p class="username">Hello {{ucfirst(Auth()->user()->username)}}!</p>
+        <div class="outlines">&nbsp;</div>
+     
+        <div class="con-info">
+           <p>Change Password</p>
+           <div class="box-pass" onclick="tochangepass()">
+              <p>Change</p>
+           </div>
+        </div>
+        <div class="outlines">&nbsp;</div>
+     
+        <div class="con-info">
+           <p>Logout</p>
+           <div class="box-pass box-pass-sec" onclick="tologout()">
+            <a href="#">
+                <p>Logout</p>
+             </a>           </div>
+        </div>
+        <div class="outlines">&nbsp;</div>
+     
+        </section>
+    
+        <script src="{{asset('n-js/poll.js')}}"></script>
+        <script>
+        @if(session('success'))
+            setTimeout(function() {
+                alert('{{session('success')}}');        
+            }, 1000);
+        @endif
+              function section() {
+    var port1 = document.getElementById('conport1');
+    var port2 = document.getElementById('conport2');
+    if(port2.style.display === 'none' || port2.style.display === '') {
+        port1.style.display = 'none';
+        port2.style.display = 'flex';
+    }
+    else {
+        port1.style.display = 'block';
+        port2.style.display = 'none';
+    }
+}
+
+
+function tochangepass() {
+    let confirmChange = confirm('Do you want to change the password?');
+    if (!confirmChange) {
+        alert('Ok. Aborted.');
+    } else {
+        // Put your password change logic here
+    }
+}
+
+
+function tologout() {
+    let confirmChange = confirm('Do you want to logout?');
+    if (!confirmChange) {
+        alert('Ok. Aborted.');
+    } else {
+        window.location = "/logout";
+    }
+}
+        </script>
 </body>
 </html>
 
