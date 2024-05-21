@@ -14,6 +14,7 @@
         <div class="flex flex-col gap-20 justify-center items-center ">
          <h1 class="text-3xl font-bold text-white">REGISTER</h1>
          <form class="flex-col justify-center items-center flex w-full gap-4" action="{{route('formregister')}}" method="post">
+
              @csrf
              <div class="flex flex-col w-96 ">
                  <label class="text-white text-2xl font-bold" for="">Username</label>
@@ -39,4 +40,6 @@
     </div>
 
 </body>
+
 </html>
+

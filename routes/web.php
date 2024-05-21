@@ -1,28 +1,48 @@
 <?php
 
+use App\Http\Middleware\CheckIfAdmin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\LoginController;
 
 // Import the authentication middleware
+use App\Http\Controllers\PollController;
+use App\Http\Controllers\LoginController;
 use App\Http\Middleware\CheckTokenExpiry;
 use Illuminate\Auth\Middleware\Authenticate;
 
 // Define the routes
-Route::get("/", [PageController::class, "home"]);
+
 
 Route::get("/login", [PageController::class, "login"])->name('login');
 
 // Define a group for authenticated routes
+=
+Route::get("/login", [PageController::class, "login"]);
+Route::get('/register', [PageController::class, "register"]);
+
 Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(function () {
-    // Define the routes that require authentication
-    // For example, the home route
+
+    Route::get('/poll', [PageController::class, "user_showpoll"])->name('userpoll');
     Route::get("/", [PageController::class, "home"]);
+    Route::post('/poll/vote/user', [PollController::class, 'voteUser']);
 });
+// Define a group for authenticated routes
+Route::middleware([Authenticate::class, CheckTokenExpiry::class, CheckIfAdmin::class])->group(function () {
+  
+    Route::get('/admin/poll', [PageController::class, "admin_showpoll"])->name('adminpoll');
+    Route::post('/poll/vote', [PollController::class, 'vote']);
+    
+    Route::get('/admin/poll/create', [PageController::class, "admin_screatepoll"])->name('screatepoll');
+    Route::post('/admin/poll/create', [PageController::class, "admin_createpoll"])->name('createpoll');
+});
+
 
 // Route for handling login form submission
 Route::post('/login/auth/login', [LoginController::class, "index"]);
-Route::get('/logout', [LoginController::class, "logout"]);
+Route::post('/login/auth/register', [LoginController::class, "indexRegister"]);
+
+
+Route::get('/logout', [LoginController::class, "logout"])->name('logout');
 
 // Route for redirecting users to the login page if they are not authenticated
 Route::get('/unauthenticated', function () {
