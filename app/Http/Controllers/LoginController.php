@@ -35,14 +35,22 @@ class LoginController extends Controller
             $user->save();
     
             // Store token in cookie
-            $response = redirect('/')->withCookie(cookie('user_token', $token, 24 * 60))->with('success', 'Login succeeded.'); // 24 hours
+            $response = redirect('/')->withCookie(cookie('user_token', $token, 24 * 60)); // 24 hours
     
             return $response;
         }
     
-        return back()->with('username', 'The provided credentials do not match our records.');
+        return back()->withErrors([
+            'username' => 'The provided credentials do not match our records.',
+        ]);
     }
-    
+    public function indexRegister(Request $request){
+        $creds = $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+            'devision' => 'required',
+        ]);
+    }
     public function logout(Request $request){
         $user = Auth::user();
         $user->api_token = null;
@@ -53,5 +61,9 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
         return redirect('/login');
     }
+
     
+    public function indexReg(Request $request) {
+        return view('views.register');
+    }
 }

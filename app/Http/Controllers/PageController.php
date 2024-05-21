@@ -6,6 +6,7 @@ use App\Models\Poll;
 use App\Models\User;
 use App\Models\Vote;
 use App\Models\Choice;
+use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -15,67 +16,67 @@ class PageController extends Controller
     // Assuming you have the division information associated with each user, you can modify your code like this:
 
         public function countMajorityVotes()
-{
-    $votes = Vote::with(['user.division', 'choice.poll'])->get();
-    $overallVoteCount = [];
-
-    foreach ($votes as $vote) {
-        $pollId = $vote->choice->poll_id;
-        $division = $vote->user->division->name;
-        $choice = $vote->choice->choice;
-
-        if (!isset($overallVoteCount[$pollId])) {
-            $overallVoteCount[$pollId] = ['totalVotes' => 0, 'choices' => []];
-        }
-        if (!isset($overallVoteCount[$pollId]['choices'][$choice])) {
-            $overallVoteCount[$pollId]['choices'][$choice] = ['count' => 0, 'divisions' => []];
-        }
-        if (!isset($overallVoteCount[$pollId]['choices'][$choice]['divisions'][$division])) {
-            $overallVoteCount[$pollId]['choices'][$choice]['divisions'][$division] = 0;
-        }
-        $overallVoteCount[$pollId]['choices'][$choice]['divisions'][$division]++;
-        $overallVoteCount[$pollId]['choices'][$choice]['count']++;
-        $overallVoteCount[$pollId]['totalVotes']++;
-    }
-
-    $finalOverallVoteCount = [];
-
-    foreach ($overallVoteCount as $pollId => $data) {
-        foreach ($data['choices'] as $choice => $details) {
-            $divisionVotes = []; // Array to store votes for each choice within each division
-            
-            // Count votes for each choice within each division
-            foreach ($details['divisions'] as $division => $votes) {
-                if (!isset($divisionVotes[$choice])) {
-                    $divisionVotes[$choice] = 0;
+        {
+            $votes = Vote::with(['user.division', 'choice.poll'])->get();
+            $overallVoteCount = [];
+        
+            foreach ($votes as $vote) {
+                $pollId = $vote->choice->poll_id;
+                $division = $vote->user->division->name;
+                $choice = $vote->choice->id; // Change to id instead of choice text
+        
+                if (!isset($overallVoteCount[$pollId])) {
+                    $overallVoteCount[$pollId] = ['totalVotes' => 0, 'choices' => []];
                 }
-                $divisionVotes[$choice] += $votes;
+                if (!isset($overallVoteCount[$pollId]['choices'][$choice])) {
+                    $overallVoteCount[$pollId]['choices'][$choice] = ['count' => 0, 'divisions' => []];
+                }
+                if (!isset($overallVoteCount[$pollId]['choices'][$choice]['divisions'][$division])) {
+                    $overallVoteCount[$pollId]['choices'][$choice]['divisions'][$division] = 0;
+                }
+                $overallVoteCount[$pollId]['choices'][$choice]['divisions'][$division]++;
+                $overallVoteCount[$pollId]['choices'][$choice]['count']++;
+                $overallVoteCount[$pollId]['totalVotes']++;
             }
-            
-            // Find the choice with the maximum votes across divisions
-            $maxVotes = 0;
-            $majorityChoice = null;
-            foreach ($divisionVotes as $choice => $votes) {
-                if ($votes > $maxVotes) {
-                    $maxVotes = $votes;
-                    $majorityChoice = $choice;
+        
+            $finalOverallVoteCount = [];
+        
+            foreach ($overallVoteCount as $pollId => $data) {
+                foreach ($data['choices'] as $choiceId => $details) {
+                    $divisionVotes = []; // Array to store votes for each choice within each division
+        
+                    // Count votes for each choice within each division
+                    foreach ($details['divisions'] as $division => $votes) {
+                        if (!isset($divisionVotes[$choiceId])) {
+                            $divisionVotes[$choiceId] = 0;
+                        }
+                        $divisionVotes[$choiceId] += $votes;
+                    }
+        
+                    // Find the choice with the maximum votes across divisions
+                    $maxVotes = 0;
+                    $majorityChoice = null;
+                    foreach ($divisionVotes as $choiceId => $votes) {
+                        if ($votes > $maxVotes) {
+                            $maxVotes = $votes;
+                            $majorityChoice = $choiceId;
+                        }
+                    }
+        
+                    $percentage = ($maxVotes / $data['totalVotes']) * 100; // Calculate percentage based on maxVotes
+                    $finalOverallVoteCount[$pollId][$choiceId] = [
+                        'percentage' => $percentage,
+                        'divisions' => $details['divisions'],
+                        'count' => $maxVotes, // Store the count based on maxVotes
+                        'majority_choice' => $majorityChoice, // Store the majority choice
+                        'votes' => $votes
+                    ];
                 }
             }
-            
-            $percentage = ($maxVotes / $data['totalVotes']) * 100; // Calculate percentage based on maxVotes
-            $finalOverallVoteCount[$pollId][$majorityChoice] = [
-                'percentage' => $percentage,
-                'divisions' => $details['divisions'],
-                'count' => $maxVotes, // Store the count based on maxVotes
-                'majority_choice' => $majorityChoice, // Store the majority choice
-            ];
+        
+            return $finalOverallVoteCount;
         }
-    }
-    
-    
-
-    return $finalOverallVoteCount;
-}
+        
     public function home()
     {
         $finalOverallVoteCount = $this->countMajorityVotes();
@@ -116,11 +117,15 @@ class PageController extends Controller
                        
                     }
                   
+                    $userVote = $votes->where('poll_id', $poll->id)->first();
+
                     $pollsData[] = [
                         'poll' => $poll,
                         'choices' => $voteChoices,
                         'allChoices' => $allChoices, // Include all choices for the poll
                         'vote' => $vote,
+                        'userVote' => $userVote,
+
                         'totalCount' => $totalCount // Add total count to poll data
                     ];
                 }
@@ -137,115 +142,178 @@ class PageController extends Controller
     public function login(){
         return view("login");
     }
+    public function register() {
+        $do = Division::get();
+        return view("register", ['division' => $do]);
+    }
+
+    public function form_register(Request $request) {
+        $check = $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+            'division' => 'required',
+        ]);
+
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $division = $request->input('division');
+
+        $result = User::create([
+            'username' => $username,
+            'password' => $password,
+            'role' => "user",
+            'division_id' => $division,
+        ]);
+
+        if($result) {
+            return redirect()->route('login');
+        }
+    }
 
     //Part of VGJR
     public function user_showpoll() {
-    $time = time();
-    $dateFormatted = date('m/d/Y, h:i:s', $time);
+        $finalOverallVoteCount = $this->countMajorityVotes();
+        $user = auth()->user();
+        
+        // Retrieve all polls and eager load choices and user
+        $polls = Poll::with('choices')->get();
+        
+        // Initialize array to store poll data
+        $pollsData = [];
+    
+        foreach ($polls as $poll) {
+            // Retrieve all choices for the poll
+            $allChoices = $poll->choices;
+    
+            // Check if the user has voted on this poll
+            $userVote = Vote::where("user_id", $user->id)->where("poll_id", $poll->id)->first();
+    
+            // Get the choice the user voted for (if any)
+            $voteChoices = collect();
+            if ($userVote && !empty($userVote->choice_id)) {
+                $voteChoice = Choice::find($userVote->choice_id);
+                if ($voteChoice) {
+                    $voteChoices = collect([$voteChoice]);
+                }
+            }
+            $userVote = Vote::where("user_id", $user->id)->where("poll_id", $poll->id)->first();
 
-    // "Example"
-    $poll = [
-        [
-            "title" => "Ayam apa Telur?",
-            "user" => "ahmad",
-            "timeout" => $dateFormatted,
-            "polls" => [
-                0 => "Ayam",
-                1 => "Telur"
-            ],
-            "votes" => [
-                0 => "0",
-                1 => "0"
-            ],
-            "status" => true
-        ],
-        [
-            "title" => "Bubur diaduk apa gak diaduk",
-            "user" => "amongus",
-            "timeout" => $dateFormatted,
-            "polls" => [
-                0 => "Apa Coba",
-                1 => "Gak"
-            ],
-            "votes" => [
-                0 => "19",
-                1 => "5"
-            ],
-            "status" => false
-        ]
-    ];    
 
-        return view("user.poll", ['poll' => $poll]);
+    
+            // Calculate total vote count for the poll
+            $totalCount = 0;
+            if (isset($finalOverallVoteCount[$poll->id])) {
+                foreach ($finalOverallVoteCount[$poll->id] as $choiceData) {
+                    $totalCount += $choiceData['count'];
+                }
+            }
+    
+            // Add the poll data to the array
+            $pollsData[] = [
+                'poll' => $poll,
+                'choices' => $voteChoices,
+                'allChoices' => $allChoices,
+                'userVote' => $userVote,
+                'totalCount' => $totalCount,
+                'hasVoted' => $userVote ? true : false
+            ];
+        }
+    
+        return view("user.poll", compact("pollsData", "user", "finalOverallVoteCount"));
     }
 
-    public function admin_showpoll() {
-    $time = time();
-    $dateFormatted = date('m/d/Y, h:i:s', $time);
+    public function admin_showpoll()
+    {
+        $finalOverallVoteCount = $this->countMajorityVotes();
+        $user = auth()->user();
+        
+        // Retrieve all polls and eager load choices and user
+        $polls = Poll::with('choices')->get();
+        
+        // Initialize array to store poll data
+        $pollsData = [];
+    
+        foreach ($polls as $poll) {
+            // Retrieve all choices for the poll
+            $allChoices = $poll->choices;
+    
+            // Check if the user has voted on this poll
+            $userVote = Vote::where("user_id", $user->id)->where("poll_id", $poll->id)->first();
+    
+            // Get the choice the user voted for (if any)
+            $voteChoices = collect();
+            if ($userVote && !empty($userVote->choice_id)) {
+                $voteChoice = Choice::find($userVote->choice_id);
+                if ($voteChoice) {
+                    $voteChoices = collect([$voteChoice]);
+                }
+            }
+            $userVote = Vote::where("user_id", $user->id)->where("poll_id", $poll->id)->first();
 
-    // "Example"
-    $poll = [
-        [
-            "title" => "Ayam apa Telur?",
-            "user" => "ahmad",
-            "timeout" => $dateFormatted,
-            "polls" => [
-                0 => "Ayam",
-                1 => "Telur"
-            ],
-            "votes" => [
-                0 => "0",
-                1 => "0"
-            ],
-            "status" => true
-        ],
-        [
-            "title" => "Bubur diaduk apa gak diaduk",
-            "user" => "amongus",
-            "timeout" => $dateFormatted,
-            "polls" => [
-                0 => "Apa Coba",
-                1 => "Gak"
-            ],
-            "votes" => [
-                0 => "19",
-                1 => "5"
-            ],
-            "status" => false
-        ]
-    ];    
-        return view("admin.poll", ['poll' => $poll]);
+    
+            // Calculate total vote count for the poll
+            $totalCount = 0;
+            if (isset($finalOverallVoteCount[$poll->id])) {
+                foreach ($finalOverallVoteCount[$poll->id] as $choiceData) {
+                    $totalCount += $choiceData['count'];
+                }
+            }
+    
+            // Add the poll data to the array
+            $pollsData[] = [
+                'poll' => $poll,
+                'choices' => $voteChoices,
+                'allChoices' => $allChoices,
+                'userVote' => $userVote,
+                'totalCount' => $totalCount,
+                'hasVoted' => $userVote ? true : false
+            ];
+        }
+    
+        return view("admin.poll", compact("pollsData", "user", "finalOverallVoteCount"));
     }
- 
+    
     public function admin_createpoll(Request $request) {
         //Retrieve the input data
-        $pollName = $request->input('poll_name');
-        $pollDeadline = $request->input('poll_deadline');
-        $pollBodies = $request->input('poll_body');
-
+        $pollName = $request->input('title');
+        $pollDeadline = $request->input('deadline');
+        // $pollBodies = $request->input('poll_body');
+        $lastPoll = Poll::latest()->first();
         //Perform validation
         $validated = $request->validate([
-            'poll_name' => 'required|string|max:60',
+            'poll_title' => 'required|string|max:60',
+            'poll_desc' => 'required',
             'poll_deadline' => 'required|date',
-            'poll_body' => 'required|array|min:1',
-            'poll_body.*' => 'required|string|max:40',
+            'poll_body' => 'array|min:1',
+            'poll_body.*' => 'string|max:255',
+
         ]);
 
-        //Bagian buat poll (poll)
-        $pollName = $validated['poll_name'];
-        $pollDeadline = Carbon::parse($validated['poll_deadline'])->timestamp;
-        $pollBodies = $validated['poll_body'];
-
-        //Bagian buat pilihan (choices)
-        foreach ($pollBodies as $pollBody) {
+        
+        $user = Auth()->user()->id;
+        
+        Poll::create(['title'=>$validated['poll_title'],'description'=>$validated['poll_desc'],'deadline'=>$validated['poll_deadline'],'created_by'=>$user]);
+        foreach ($validatedData['poll_body'] as $option) {
+            Choice::create([
+                'poll_id'=> $lastPoll->id,
+                'choices' => $option
+            ]);
+           
         }
-        error_log($pollBodies);
+        
+
 
         //Silahkan diubah, mau tambahin message atau apa kek
         return redirect()->back();
     }
 
+
+
     public function admin_screatepoll() {
         return view("admin.create_poll");
     }
- 
+
+    
+   
+
 }

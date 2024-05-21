@@ -16,185 +16,150 @@
    <!-- Custom Framework -->
    @vite('resources/css/app.css')
    <title>Poll</title>
+   @vite('resources/css/app.css')</head>
+
 </head>
 <script src="{{asset('n-js/poll.js')}}"></script>
 <body>
 
-   <!-- Navbar-->
-   <div class="">
-      <nav class="flex items-center justify-between py-5 bg-nav">
-          <div class="flex items-center">
-              <p class="ml-5">&nbsp;</p>
-          </div>
-          <div class="flex justify-center flex-grow"> <!-- Center content -->
-              <ul class="flex gap-5">
-                  @if(auth()->check()) {{-- Check if user is authenticated --}}
-                  @if(auth()->user()->role === 'admin')
-                      {{-- User is an admin --}}
-                      <li><a class="font-medium text-white" href="../">Home</a></li>
-                      <li><a class="font-bold text-white" href="{{route('adminpoll')}}">Polls</a></li>
-                  @else
-                      {{-- User is a normal user --}}
-                      <li><a class="font-medium text-white" href="../">Home</a></li>
-                      <li><a class="font-bold text-white" href="{{route('userpoll')}}">Polls</a></li>
-                  @endif
+   <nav class="flex items-center justify-between py-5 bg-nav">
+      <div class="flex items-center">
+          <p class="ml-5">&nbsp;</p>
+      </div>
+      <div class="flex justify-center flex-grow"> <!-- Center content -->
+          <ul class="flex gap-5">
+              @if(auth()->check()) {{-- Check if user is authenticated --}}
+              @if(auth()->user()->role === 'admin')
+                  {{-- User is an admin --}}
+                  <li><a class="font-medium text-white" href="/">Home</a></li>
+                  <li><a class="font-bold text-white" href="{{route('adminpoll')}}">Polls</a></li>
+              @else
+                  {{-- User is a normal user --}}
+                  <li><a class="font-medium text-white" href="/">Home</a></li>
+                  <li><a class="font-bold text-white" href="{{route('userpoll')}}">Polls</a></li>
               @endif
+          @endif
 
-              </ul>
-          </div>
-          <div class="flex items-center">
-              <a href="#" class="mr-5" onclick="section()"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></a>
-          </div>
-          </div>
-      </nav>
+          </ul>
+      </div>
+      <div class="flex items-center">
+         <button href="" class="mr-5" onclick="section()"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></button>
+      </div>
+      </div>
+  </nav>
+
+
+
+   
   </div>
    <!-- Section Container -->
    <!-- View Polls -->
    <section id="conport1">
-      <p>Polls</p>
-      <div id="list-polls">
-  
-          @php
-              $row = 0;
-          @endphp
-  
-          @foreach($poll as $po)
-              @if($po['status'] == true)
-                  <div id="polls">
-                      <p>{{ $po['title'] }}</p>
-                      <p>Created by: {{ $po['user'] }} | Deadline: {{ $po['timeout'] }}</p>
-  
-                      <!-- Selecting Polls -->
-                      <div class="select-poll">
-                          @php
-                              $column = 0;
-                              $countvote = 0;
-                          @endphp
-  
-                          <!-- Iterate over poll options -->
-                          @foreach($po['polls'] as $selpol)
-                              @php
-                                  $cbar = 1 * ($column + 1) % 2;
-                                  $votes = intval($po['votes'][$column]); // Get votes for current poll option
-                                  $totalVotes = array_sum($po['votes']); // Total votes for all options
-                                  $percentage = ($totalVotes > 0) ? round(($votes / $totalVotes) * 100, 2) : 0;
-                                  $barClass = ($cbar === 0) ? 'green' : 'red';
-                              @endphp
-  
-                              <div class="flex-select-poll">
-                                  <div class="dot-poll" data-poll-index="{{ $row }}" data-option-index="{{ $column }}" onclick="trigger(this, {{$totalVotes}}, {{$votes}})"></div>
-                                  <p>{{ $selpol }}</p>
-                              </div>
-  
-                              <!-- Poll bar -->
-                              <div id="bar-select-poll" show-poll="{{ $row }}">
-                                  <div class="bar-selected-poll {{ $barClass }}" style="width: {{ $percentage }}%;" input-poll="{{$row}}-{{$column}}" >
-                                  </div>
-                              </div>
-  
-                              @php
-                                  $column++;
-                              @endphp
-                          @endforeach
-  
-                      </div>
-                      <div class="outlines"></div>
+   <p>Polls</p>
+   <div id="list-polls">
+   
+   <!-- gw buatin design nya aja ya -->
+   <!-- start of forEach -->
+   @foreach($pollsData as $pollData)
+   <div id="polls">
+       <p>{{ $pollData['poll']->title }}</p>
+       <p>Created by: {{ $pollData['poll']->user->username }} | Deadline: {{ $pollData['poll']->deadline }}</p>
+   
+       <!-- for Selecting Polls -->
+       <div class="select-poll">
+          @foreach ($pollData['allChoices'] as $choice)
+          <form id="vote-form" method="POST" action="/poll/vote/user">
+            @csrf
+            <input type="hidden" name="poll_id" id="poll_id">
+            <input type="hidden" name="choice_id" id="choice_id">
+        
+            <div class="flex-select-poll">
+                {{$choice->poll_id}}
+                <input class="dot-poll" type="radio" name="vote" data-poll-id="{{$choice->poll_id}}" data-choice-id="{{$choice->id}}" required onclick="submitForm(this)" {{ $pollData['hasVoted'] ? 'disabled' : '' }} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
+                <li class="list-none">{{ $choice->choice }}</li>
+            </div>
+              
+              <!-- Render the progress bar based on the percentage -->
+
+               <div id="bar-select-poll" class="mt-2" style="display:{{$pollData['hasVoted'] ? 'flex':'none'}} !important;" show-poll="{{$pollData['poll']->id}}">
+                   @php
+                       $isUserVote = $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id;
+                       $percentage = 0;
+                       if (isset($finalOverallVoteCount[$pollData['poll']->id][$choice->id])) {
+                                $percentage = $finalOverallVoteCount[$pollData['poll']->id][$choice->id]['percentage'];
+                            }
+                  @endphp
+
+
+               <div class=" progress-bar" style="width: 100%; background-color: #ccc;">
+                  <div class="h-100 mb-{{ $isUserVote ? '0' : '2' }}" style=" width: {{ $percentage }}%; background-color: {{ $isUserVote ? '#3BD138' : '#E93232' }};">
+                     &nbsp;
                   </div>
-               @elseif($po['status'] == false)
-               <div id="polls">
-                  <p>{{ $po['title'] }}</p>
-                  <p>Created by: {{ $po['user'] }} | Deadline: {{ $po['timeout'] }}</p>
+               </div>
 
-                  <!-- Selecting Polls -->
-                  <div class="select-poll">
-                      @php
-                          $column = 0;
-                          $countvote = 0;
-                      @endphp
+            </form>
+         </div>
+@endforeach
+</div>
+<div class="mt-3 outlines">&nbsp;</div>
+</div>
+@endforeach
 
-                      <!-- Iterate over poll options -->
-                      @foreach($po['polls'] as $selpol)
-                          @php
-                              $cbar = 1 * ($column + 1) % 2;
-                              $votes = intval($po['votes'][$column]); // Get votes for current poll option
-                              $totalVotes = array_sum($po['votes']); // Total votes for all options
-                              $percentage = ($totalVotes > 0) ? round(($votes / $totalVotes) * 100, 2) : 0;
-                              $barClass = ($cbar === 0) ? 'green' : 'red';
-                          @endphp
 
-                          <div class="flex-select-poll">
-                              <div class="dot-poll" data-poll-index="{{ $row }}" data-option-index="{{ $column }}"></div>
-                              <p>{{ $selpol }}</p>
-                          </div>
 
-                          <!-- Poll bar -->
-                          <div id="bar-select-poll" style="display: flex;" show-poll="{{ $row }}">
-                              <div class="bar-selected-poll {{ $barClass }}" style="width: {{ $percentage }}%;" input-poll="{{$row}}-{{$column}}">
-                                  {{ round($percentage) }}%
-                              </div>
-                          </div>
 
-                          @php
-                              $column++;
-                          @endphp
-                      @endforeach
 
-                  </div>
-                  <div class="outlines"></div>
-              </div>
-              @endif
-  
-              @php
-                  $row++;
-              @endphp
-          @endforeach
-  
-      </div>
    </section>
      <!-- Accounts -->
    <section id="conport2">
-   <p class="username">Hello Username!</p>
-   <div class="outlines"></div>
+   <p class="username">Hello {{ucfirst(Auth()->user()->username)}}!</p>
+   <div class="outlines">&nbsp;</div>
+
    <div class="con-info">
       <p>Change Password</p>
       <div class="box-pass" onclick="tochangepass()">
          <p>Change</p>
       </div>
    </div>
-   <div class="outlines"></div>
+   <div class="outlines">&nbsp;</div>
+
    <div class="con-info">
       <p>Logout</p>
-      <div class="box-pass box-pass-sec" onclick="tologout()">
-         <a href="#">
+      <div class="box-pass box-pass-sec">
+         <a href="#" onclick="tologout()">
             <p>Logout</p>
          </a>
       </div>
    </div>
-   <div class="outlines"></div>
+   <div class="outlines">&nbsp;</div>
+
    </section>
       <script src="{{asset('n-js/poll.js')}}"></script>
       <script>
-
-function tochangepass() {
-    let confirmChange = confirm('Do you want to change the password?');
-    if (!confirmChange) {
-        alert('Ok. Aborted.');
-    } else {
-        // Put your password change logic here
+    function tochangepass() {
+        let confirmChange = confirm('Do you want to change the password?');
+        if (!confirmChange) {
+            alert('Ok. Aborted.');
+        } else {
+            // Put your password change logic here
+        }
     }
-}
 
 
-function tologout() {
-    let confirmChange = confirm('Do you want to logout?');
-    if (!confirmChange) {
-        alert('Ok. Aborted.');
-    } else {
-        window.location = "/logout";
-    }
-}
+        function tologout() {
+            let confirmChange = confirm('Do you want to logout?');
+            if (!confirmChange) {
+                alert('Ok. Aborted.');
+            } else {
+                window.location = "/logout";
+            }
+        }
 
          function submitForm(radio) {
+            let confirmChange = confirm('This action will be save your selective option.');
+            if (!confirmChange) {
+                alert('Ok. Aborted.');
+            } else {
              // Get the data-poll-id of the selected radio button
           const pollId = radio.getAttribute("data-poll-id");
 
@@ -262,6 +227,7 @@ function tologout() {
                             selectedRadio.checked = true;
                             selectedRadio.disabled = true;
                             showProgressBar(pollId);
+                            }
                         }
                     }
                 }
@@ -279,6 +245,20 @@ function tologout() {
             selectedRadio.disabled = false;
         }
 
+        
+        function section() {
+    var port1 = document.getElementById('conport1');
+    var port2 = document.getElementById('conport2');
+    if(port2.style.display === 'none' || port2.style.display === '') {
+        port1.style.display = 'none';
+        port2.style.display = 'flex';
+    }
+    else {
+        port1.style.display = 'block';
+        port2.style.display = 'none';
+    }
+}
       </script>
 </body>
+</html>
 </html>

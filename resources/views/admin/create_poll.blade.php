@@ -14,7 +14,7 @@
    <link rel="stylesheet" href="{{asset('n-css/poll.css')}}"/>
 
    <!-- Custom Framework -->
-   @vite('resources/css/app.css')
+   @vite('../resources/css/app.css')
    <title>Poll</title>
 </head>
 <script src="{{asset('n-js/poll.js')}}"></script>
@@ -43,12 +43,12 @@
               </ul>
           </div>
           <div class="flex items-center">
-              <a href="#" class="mr-5" onclick="window.location = '{{route('adminpoll')}}'"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></a>
+              <a href="#" class="mr-5" onclick="section()"><img src="{{ asset('assets/Group 6.png') }}" class="w-7" alt=""></a>
           </div>
           </div>
       </nav>
   </div>
-  <section id="conport3">
+  <section id="conport1" class="justify-center items-center flex">
    <form action="{{route('createpoll')}}" method="POST">
    @csrf
    <p id="textcport3">Create A Poll</p>
@@ -58,15 +58,28 @@
       </div>
    <p>Poll Name</p>
    <input type="text" onchange="testInput(this)" name="poll_name" required>
+   <p>Poll Description</p>
+
+   <textarea style="height: 5em; color: black;" name="poll_desc"></textarea>
    <p>Poll Deadline</p>
    <input type="date" onchange="testInput(this)" name="poll_deadline" required>
    <p>Poll Body</p>
-   <div id="body_poll">
-   <input type="text" onchange="testInput(this, false, 0, false)"  name="poll_body" placeholder="Write an option.." required>
-   <input type="text" onchange="testInput(this, true, 1, false)" name="poll_body" placeholder="Write an option.." required>
+   <div id="body_poll" class="relative">
+    <div class="relative">
+
+        <input type="text" onchange="testInput(this, false, 0, false)"  name="poll_body[]" placeholder="Write a option.." required>
+        <button style="" class="absolute  text-[#272525] right-5 top-2 text-xl">-</button>
+    </div>
+    <div class="relative">
+
+        <input type="text" onchange="testInput(this, true, 1, false)"  name="poll_body[]" placeholder="Write a option.." required>
+        <button style="" class="absolute  text-[#272525] right-5 top-2 text-xl">-</button>
+    </div>
+  
+
    <!-- Automatic Create's Another -->
    </div>
-   <input type="submit" onclick="toconfirmform()" name="Submit" id="submitcrpoll">
+   <input type="submit" name="Submit" id="submitcrpoll" onclick="toconfirmform()">
    </div>
    </form>
 </section>
@@ -110,7 +123,6 @@
             }
         }
 
-
         function tologout() {
             let confirmChange = confirm('Do you want to logout?');
             if (!confirmChange) {
@@ -133,6 +145,12 @@
         port2.style.display = 'none';
     }
 }
+    function autodeleteinput(info) {
+        var pollbody = document.querySelectorAll('[selective_deletes="' + info.getAttribute('selective_deletes') + '"]');
+        pollbody[0].remove();
+        pollbody[1].remove();
+    }
+
     function testInput(info, bool, number, isallowdelete) {
     var pollbody = document.querySelectorAll('[name="poll_body"]');
     
@@ -142,16 +160,21 @@
             const newDiv = document.createElement('div');
             const newP = document.createElement('button');
             newP.className = 'absolute text-[#272525] right-5 top-2 text-xl';
+            newP.setAttribute('onclick', 'autodeleteinput(this)');
             newDiv.className = 'relative';
             newP.innerText = '-'
             newDiv.setAttribute('id', 'div1');
             newP.setAttribute('id','p1');
             newInput.type = 'text';
-            newInput.name = 'poll_body';
+            newInput.name = `poll_body[]`;
             newInput.className = 'inputforpoll';
             newInput.placeholder = 'Write an option..';
-            newInput.required = true;
+            newInput.required = false;
             let tonumber = number + 1; // Increment number
+            //allowing deleting input tho
+            newInput.setAttribute('selective_deletes', tonumber);
+            newP.setAttribute('selective_deletes', tonumber);
+
             newInput.setAttribute('onchange', 'testInput(this, true, ' + tonumber +', true)');
             
             // Append the new input element to the form

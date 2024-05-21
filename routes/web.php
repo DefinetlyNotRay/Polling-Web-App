@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PollController;
 use App\Http\Controllers\LoginController;
 
 // Import the authentication middleware
@@ -11,7 +12,9 @@ use Illuminate\Auth\Middleware\Authenticate;
 // Define the routes
 Route::get("/", [PageController::class, "home"]);
 
-Route::get("/login", [PageController::class, "login"]);
+Route::get('/login', [PageController::class, "login"])->name('login');
+Route::get('/register', [PageController::class, "register"])->name('register');
+Route::post('/register/post', [PageController::class, "form_register"])->name('formregister');
 
 // Define a group for authenticated routes
 Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(function () {
@@ -27,6 +30,7 @@ Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(functio
     Route::get('/poll', [PageController::class, "user_showpoll"])->name('userpoll');
     // For Admin - polls page
     Route::get('/admin/poll', [PageController::class, "admin_showpoll"])->name('adminpoll');
+    Route::post('/poll/vote', [PollController::class, 'vote']);
     // Create Polls
     Route::get('/admin/poll/create', [PageController::class, "admin_screatepoll"])->name('screatepoll');
     Route::post('/admin/poll/create', [PageController::class, "admin_createpoll"])->name('createpoll');
