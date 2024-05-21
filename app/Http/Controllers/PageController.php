@@ -136,5 +136,36 @@ class PageController extends Controller
     public function login(){
         return view("login");
     }
+<<<<<<< Updated upstream
+=======
+
+    public function register() {
+        $do = Division::get();
+        return view("register", ['division' => $do]);
+    }
+
+    public function form_register(Request $request) {
+        $check = $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+            'division' => 'required',
+        ]);
+
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $division = $request->input('division');
+
+        $result = User::create([
+            'username' => $username,
+            'password' => $password,
+            'role' => "user",
+            'division_id' => $division,
+        ]);
+
+        if($result) {
+            return redirect()->route('login');
+        }
+    }
+>>>>>>> Stashed changes
    
 }
