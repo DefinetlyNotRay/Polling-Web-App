@@ -7,6 +7,7 @@ use App\Models\Division;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -20,9 +21,9 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'password',
-        'role',
         'api_token ',
         'token_expiry',
+        'role',
         'division_id'
     ];
     public function division()
@@ -46,6 +47,21 @@ class User extends Authenticatable
     protected $casts = [
         'token_expiry' => 'datetime', // Cast token_expiry to datetime
     ];
+    // protected $attributes = [
+    //     // Set default values to null or some other constant
+    //     'token_expiry' => null,
+    //     'api_token' => null
+    // ];
+
+    // // Constructor method
+    // public function __construct(array $attributes = [])
+    // {
+    //     parent::__construct($attributes);
+
+    //     // Set dynamic default values
+    //     $this->attributes['token_expiry'] = now()->addHours(24);
+    //     $this->attributes['api_token'] = Str::random(60);
+    // }
 
     /**
      * The attributes that should be hidden for serialization.

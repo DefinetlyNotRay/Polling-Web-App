@@ -32,6 +32,8 @@
                      @endforeach
                  </select>
              </div>
+             <input type="hidden" name="api_token" value="{{Str::random(60)}}">
+             <input type="hidden" name="expiry_token" value="{{now()->addHours(24)}}">
             
              <button type="submit" class="bg-success mt-4 w-96 text-lg py-1 font-bold">Register</button>
          </form>

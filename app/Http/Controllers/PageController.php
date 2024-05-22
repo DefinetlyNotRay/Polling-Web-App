@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Poll;
 use App\Models\User;
 use App\Models\Vote;
@@ -9,7 +10,7 @@ use App\Models\Choice;
 use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class PageController extends Controller
 {
@@ -172,11 +173,6 @@ class PageController extends Controller
         }
     }
 
-    public function register(){
-        $division = Division::get();
-        return view("register",compact('division'));
-    }
-
     //Part of VGJR
     public function user_showpoll() {
 
@@ -277,6 +273,12 @@ class PageController extends Controller
                     $totalCount += $choiceData['count'];
                 }
             }
+            $deadlineOver = false;
+            $deadline = Carbon::parse($poll->deadline);
+
+            if($deadline->isPast()) {
+                $deadlineOver = true;
+            }
     
             // Add the poll data to the array
             $pollsData[] = [
@@ -285,7 +287,9 @@ class PageController extends Controller
                 'allChoices' => $allChoices,
                 'userVote' => $userVote,
                 'totalCount' => $totalCount,
-                'hasVoted' => $userVote ? true : false
+                'hasVoted' => $userVote ? true : false,
+                'deadlineOver' => $deadlineOver
+
             ];
         }
     
@@ -293,46 +297,67 @@ class PageController extends Controller
     }
     
     public function admin_createpoll(Request $request) {
-        // Retrieve the input data
-        $validated = $request->validate([
-            'title' => 'required|string|max:60',
-            'description' => 'required',
-            'deadline' => 'required|date',
-            'poll_body' => 'array|min:1',
-            'poll_body.*' => 'string|max:255',
-        ]);
-    
         // Combine the date from the form input with the current time
-        $deadlineDateTime = Carbon::createFromFormat('Y-m-d', $validated['deadline'])->setTime(23, 59, 59);
-        
+        $deadlineDateTime = Carbon::parse($request->deadline)->endOfDay();
+    
         // Create the poll
         $user = auth()->user()->id;
-        Poll::create([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'deadline' => $deadlineDateTime, // Use the combined date and current time
+        $poll = Poll::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'deadline' => $deadlineDateTime, // Use the combined date and 23:59:59 as time
             'created_by' => $user
         ]);
-    
-        $poll = Poll::latest()->get();
-        // // Create choices for the poll
-        // foreach ($validated['poll_body'] as $option) {
-        //     Choice::create([
-        //         'choices' => $option,
-        //         'poll_id'=> $poll->id
-        //     ]);
-        // }
-    
-        // Redirect back with success message
-        return redirect("/");
+        
+        // Get the ID of the newly created poll
+        $pollId = $poll->id;
+
+    // Process each input in 'poll_body[]'
+    if ($request->has('poll_body')) {
+        foreach ($request->poll_body as $option) {
+            // Skip empty options
+            if (empty($option)) {
+                continue;
+            }
+
+            // Create choice for the poll
+            Choice::create([
+                'choice' => $option,
+                'poll_id'=> $pollId
+            ]);
+        }
     }
+        // Redirect back with success message
+        return redirect("/admin/poll");
+    }
+    
 
 
 
     public function admin_screatepoll() {
         return view("admin.create_poll");
     }
+    public function changePassword(){
+        return view("changepassword");
+    }
+    public function passwordChange(Request $request){
+        $validate = $request->validate([
+            'oldPassword' => 'required',
+            'newPassword' => 'required'
+        ]);
+        $user = auth()->user(); // Assuming the user is authenticated
+        if (Hash::check($validate['oldPassword'], $user->password)) {
+              // Old password matches, proceed to update the password
+        $user->password = Hash::make($validate['newPassword']);
+        $user->save();
+        return redirect('/home')->with('success', 'Password updated successfully.');
 
+        }else {
+            // Old password does not match, return with error
+            return redirect()->back()->with('error', 'Invalid old password.');
+        }
+
+    }
     
 
    

@@ -117,7 +117,9 @@
    <div class="con-info">
       <p>Change Password</p>
       <div class="box-pass">
+        <a href="/changepassword">
          <p>Change</p>
+      </a>
       </div>
    </div>
    <div class="outlines">&nbsp;</div>
@@ -135,7 +137,7 @@
    </section>
       <script src="{{asset('n-js/poll.js')}}"></script>
       <script>
-         function submitForm(radio) {
+          function submitForm(radio) {
              // Get the data-poll-id of the selected radio button
           const pollId = radio.getAttribute("data-poll-id");
 
@@ -219,6 +221,18 @@
 
             selectedRadio.disabled = false;
         }
+        function section() {
+    var port1 = document.getElementById('conport1');
+    var port2 = document.getElementById('conport2');
+    if(port2.style.display === 'none' || port2.style.display === '') {
+        port1.style.display = 'none';
+        port2.style.display = 'flex';
+    }
+    else {
+        port1.style.display = 'block';
+        port2.style.display = 'none';
+    }
+}
 
       </script>
 </body>

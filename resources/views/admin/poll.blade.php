@@ -122,7 +122,9 @@
    <div class="con-info">
       <p>Change Password</p>
       <div class="box-pass">
-         <p>Change</p>
+        <a href="/changepassword">
+            <p>Change</p>
+            </a>
       </div>
    </div>
    <div class="outlines">&nbsp;</div>

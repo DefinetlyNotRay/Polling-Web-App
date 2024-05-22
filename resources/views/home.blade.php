@@ -40,9 +40,8 @@
         </nav>
     </div>
     <div class="flex flex-col pt-[4rem] pl-36 " id="conport1">
-        @if(!empty($pollsData))
-            <div>
-                <h1 class="mb-5 text-3xl font-bold text-white">{{ ucfirst($user->username) }}</h1>
+        <div>
+            <h1 class="mb-5 text-3xl font-bold text-white">{{ ucfirst($user->username) }}</h1>
                 <div class="flex gap-5 mb-5 mb-12">
                     <div class="flex gap-2">
                         <img src="{{ asset('assets/Rectangle 11.png') }}" alt=""> <p class="font-semibold text-white">Your Vote</p>
@@ -51,6 +50,7 @@
                         <img src="{{ asset('assets/Rectangle 12.png') }}" alt="">  <p class="font-semibold text-white">Opposing Vote</p>
                     </div>
                 </div>
+            @if(!empty($pollsData))
                 <h2 class="mb-4 text-3xl font-bold text-white">Votes</h2>
                 @foreach($pollsData as $pollData)
                     @php
@@ -104,7 +104,7 @@
                 @endforeach
             </div>
         @else
-            <p>No polls found for this user.</p>
+            <p class="text-white">No polls found for this user.</p>
         @endif
     </div>
     <section id="conport2">
@@ -114,8 +114,10 @@
         <div class="con-info">
            <p>Change Password</p>
            <div class="box-pass">
-              <p>Change</p>
-           </div>
+            <a href="/changepassword">
+                <p>Change</p>
+                </a>           
+            </div>
         </div>
         <div class="outlines">&nbsp;</div>
      

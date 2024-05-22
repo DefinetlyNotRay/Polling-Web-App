@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;   
 
 class LoginController extends Controller
@@ -44,13 +45,31 @@ class LoginController extends Controller
             'username' => 'The provided credentials do not match our records.',
         ]);
     }
-    public function indexRegister(Request $request){
-        $creds = $request->validate([
-            'username' => 'required',
-            'password' => 'required',
-            'devision' => 'required',
-        ]);
+    public function indexRegister(Request $request)
+{
+    $creds = $request->validate([
+        'username' => 'required|unique:users',
+        'password' => 'required|min:6',
+        'division' => 'required',
+    ]);
+
+    // Create a new user
+    $user = User::create([
+        'username' => $creds['username'],
+        'password' => bcrypt($creds['password']),
+        'division_id' => $creds['division'],
+        'role' => "user",
+    ]);
+
+    // Attempt to authenticate the user
+    if (Auth::login($user)) {
+        // Redirect to an appropriate page after successful authentication
+        return redirect('/')->withCookie(cookie('user_token', $user->api_token, 24 * 60));
+    } else {
+        // Handle authentication failure
+        return redirect('/register')->with('error', 'Authentication failed.');
     }
+}
     public function logout(Request $request){
         $user = Auth::user();
         $user->api_token = null;
@@ -60,6 +79,19 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
+    }
+    public function regisAuth(){
+        $user = User::latest()->first();
+        $userCred = [
+            'username' => $user->username,
+            'password' => $user->password,
+        ];
+        if ($user && Hash::check(request('password'), $user->password)) {
+            Auth::login($user);
+
+            $response = redirect('/')->withCookie(cookie('user_token',$user->api_token));
+        };
+        return $response;
     }
 
     
