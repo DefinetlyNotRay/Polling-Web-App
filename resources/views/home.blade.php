@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home</title>
     <link rel="stylesheet" href="{{asset('n-css/poll.css')}}"/>
+    <link rel="stylesheet" href="{{asset('n-css/alert.css')}}"/>
 
     <!-- Link to your CSS file (assuming you have one) -->
     @vite('resources/css/app.css')
@@ -13,6 +14,26 @@
     
 <script src="{{asset('n-js/poll.js')}}"></script>
 <body class="bg-background-black">
+    @if(session('success'))
+    <div id="modif-do-alert">
+    <div id="do-alert">
+        <span>{{session('success')}}</span>
+        <div class="line"></div>
+      </div>
+    </div>
+      <script>
+        // Close the alert after the animation completes (5 seconds)
+        setTimeout(() => {
+          const alert = document.getElementById('do-alert');
+          const alert2 = document.getElementById('modif-do-alert');
+          alert.style.animation = 'fadeOut 500ms linear';
+          alert.addEventListener('animationend', () => {
+            alert.remove();
+            alert2.remove();
+          });
+        }, 3000);
+      </script>
+      @endif
     <div class="">
         <nav class="flex items-center justify-between py-5 bg-nav">
             <div class="flex items-center">
@@ -131,11 +152,6 @@
      
         </section>
         <script>
-@if(session('success'))
-    setTimeout(function() {
-        alert('{{session('success')}}');        
-    }, 1000);
-@endif
     function tochangepass() {
         let confirmChange = confirm('Do you want to change the password?');
         if (!confirmChange) {

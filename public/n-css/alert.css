@@ -1,0 +1,54 @@
+#modif-do-alert {
+   position: absolute;
+   width: 100%;
+   height: 15vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+#do-alert {
+   position: absolute;
+   width: 40%;
+   height: 5vh;
+   padding: 2em;
+   background-color: #5e5e5ec4;
+   color: white;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   overflow: hidden; /* Ensures the line stays within bounds */
+   font-family: 'Poppins', sans-serif;
+   font-weight: lighter;
+   border-radius: 1vw;
+ }
+
+ #do-alert .line {
+   position: absolute;
+   bottom: 0;
+   left: 100%;
+   width: 100%;
+   height: 2px; /* Thickness of the line */
+   background-color: lime;
+   animation: moveLine 3s linear forwards;
+   transform: translateY(-15%);
+ }
+
+ @keyframes moveLine {
+   from {
+     left: 100%;
+   }
+   to {
+     left: 0;
+   }
+ }
+
+ @keyframes fadeOut {
+   from {
+     opacity: 1;
+   }
+   to {
+     transform: translateY(-100%);
+     opacity: 0;
+   }
+ }
