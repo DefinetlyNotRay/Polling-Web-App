@@ -12,12 +12,22 @@
 
    <!-- Custom CSS -->
    <link rel="stylesheet" href="{{asset('n-css/poll.css')}}"/>
+   <link rel="stylesheet" href="{{asset('n-css/alert.css')}}"/>
    <title>Poll</title>
    @vite('resources/css/app.css')</head>
 
 </head>
 <script src="{{asset('n-js/poll.js')}}"></script>
 <body>
+    <div id="modif-do-confirm">
+        <div id="do-confirm">
+            <span id="text-do-confirm">Test.</span>
+            <div class="frs-button">
+                <input type="button" name="await_to_confirm" id="dc_green" value="Submit">
+                <input type="button" name="await_to_cancel" id="dc_red" value="Cancel">
+            </div>
+          </div>
+        </div>
 
    <nav class="flex items-center justify-between py-5 bg-nav">
       <div class="flex items-center">
@@ -51,7 +61,7 @@
     <div class="do-flex">
         <p>Polls</p>
 
-        <button type="button" class="createpoll" onclick="window.location = '{{route('screatepoll')}}'">Create A Poll</button>
+        <button type="button" class="createpoll" onclick="toshowactions('You are about to create a poll.', this, 0)">Create A Poll</button>
 
     </div>
    <div id="list-polls" >
@@ -103,7 +113,7 @@
 <div class="flex items-center justify-end">
     <form method="get" action="/poll/delete/{{$pollData['poll']->id}}">
         @csrf
-        <button type="submit" class="bg-[#E93232] px-4 py-1 font-bold">Delete</button>
+        <button type="button" myButtonForm="{{$pollData['poll']->id}}" class="bg-[#E93232] px-4 py-1 font-bold" onclick="toshowactions('This action will delete a poll.', this, 1)">Delete</button>
     </form>
 </div>
 
@@ -138,6 +148,97 @@
    <div class="outlines">&nbsp;</div>
    </section>
       <script>
+
+        //Shows confirm alert
+        function toshowactions(message, element, path_action) {
+            var boolalert = false;
+
+            var showalert = document.getElementById('modif-do-confirm');
+            var conshowalert = document.getElementById('do-confirm');
+            var textshowalert = document.getElementById('text-do-confirm');
+
+            conshowalert.style.animation = 'goesUpShow 0.5s forwards';
+            showalert.style.display = 'flex';
+            textshowalert.innerText = message;
+
+            // Add event listener to the document to capture all clicks
+            // Filtering to avoid duplicate listener
+            if(!boolalert) {
+            document.addEventListener('click', captureclicks);
+            boolalert = true;
+            }
+
+            function captureclicks(event) {
+
+            var b1alert = document.getElementById('dc_green').getAttribute('name'); // Submit / Continue
+            var b2alert = document.getElementById('dc_red').getAttribute('name'); // Cancel
+
+            const container = conshowalert;
+
+            //do refresh page in case users load back
+            if(document.getElementById('dc_green').disabled || document.getElementById('dc_red').disabled) {
+                window.location.reload();
+                textshowalert.innerText = 'Refreshing.';
+                document.getElementById('dc_green').style.backgroundColor = 'whitesmoke';
+                document.getElementById('dc_red').style.backgroundColor = 'whitesmoke';
+                    
+            }
+                if (container.contains(event.target) && !event.target.getAttribute('name')) {
+                    console.log("isPopUpAlert: " + true);
+                }
+                else if(event.target.getAttribute('name') == b1alert) { // Submit / Continue
+                    textshowalert.innerText = 'Processing.';
+                    document.getElementById('dc_green').disabled = true;
+                    document.getElementById('dc_red').disabled = true;
+                    
+                    //start functions here
+                    /*
+                    List number for doing actions depending where you on.
+                    
+                    0 :: @Admin / Create a poll
+                    1 :: @Admin / Delete specific poll
+                    (soon)
+                    */
+
+                    if(path_action == 0) {
+                        window.location = '{{route('screatepoll')}}';
+                    }
+                    else if(path_action == 1) {
+                        var formId = element.getAttribute('myButtonForm');
+                        var form = document.querySelector('form[action="/poll/delete/' + formId + '"]');
+
+                        form.submit();
+                    }
+                        //Prevent from duplicating actions
+                        setTimeout(function() {
+                        
+                        //avoiding duplicate listener                        
+                        document.removeEventListener('click', captureclicks);
+                        boolalert = false;
+
+                        conshowalert.style.animation = 'goesUpClose 0.5s forwards';
+                        }, 250);
+
+                        setTimeout(function() {
+                        showalert.style.display = 'none';
+                        }, 800);
+
+                    //end functions here
+
+                //To ensure main element dont get trigger
+                } else if(!element.contains(event.target) && event.target.getAttribute('onclick') === null || event.target.getAttribute('name') == b2alert) { // Cancel
+                    conshowalert.style.animation = 'goesUpClose 0.5s forwards';
+                    document.removeEventListener('click', captureclicks);
+                    boolalert = false;
+                    console.log("isPopUpAlert: " + false);
+
+                    setTimeout(function() {
+                        showalert.style.display = 'none';
+                    }, 750);
+                }
+            }
+        }
+
          function submitForm(radio) {
              // Get the data-poll-id of the selected radio button
           const pollId = radio.getAttribute("data-poll-id");

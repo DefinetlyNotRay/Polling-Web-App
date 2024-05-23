@@ -36,7 +36,7 @@ class LoginController extends Controller
             $user->save();
     
             // Store token in cookie
-            $response = redirect('/')->withCookie(cookie('user_token', $token, 24 * 60)); // 24 hours
+            $response = redirect('/')->withCookie(cookie('user_token', $token, 24 * 60))->with('success', 'Login Succeeded.'); // 24 hours
     
             return $response;
         }

@@ -1,0 +1,131 @@
+/*Alerting after do actions / navigate to another page*/
+
+#modif-do-alert {
+   position: absolute;
+   width: 100%;
+   height: 15vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+#do-alert {
+   position: absolute;
+   width: 40%;
+   height: 5vh;
+   padding: 2em;
+   background-color: #5e5e5ec4;
+   color: white;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   overflow: hidden; /* Ensures the line stays within bounds */
+   font-family: 'Poppins', sans-serif;
+   font-weight: lighter;
+   border-radius: 1vw;
+ }
+
+ #do-alert .line {
+   position: absolute;
+   bottom: 0;
+   left: 100%;
+   width: 100%;
+   height: 2px; /* Thickness of the line */
+   background-color: lime;
+   animation: moveLine 3.2s linear forwards;
+   transform: translateY(-15%);
+ }
+
+ @keyframes moveLine {
+   from {
+     left: 100%;
+   }
+   to {
+     left: 0;
+   }
+ }
+
+ @keyframes fadeOut {
+   from {
+     opacity: 1;
+   }
+   to {
+     transform: translateY(-100%);
+     opacity: 0;
+   }
+ }
+
+ /*Alert to confirm before do actions*/
+
+ @keyframes goesUpShow {
+   from {
+     transform: translateY(200%);
+   }
+   to {
+     transform: translateY(0%);
+   }
+ }
+
+ @keyframes goesUpClose {
+   from {
+     opacity: 1;
+   }
+   to {
+     transform: translateY(200%);
+     opacity: 0;
+   }
+ }
+
+ #modif-do-confirm {
+   position: fixed;
+   width: 100%;
+   height: 15vh;
+   display: none;
+   bottom: 0;
+   justify-content: center;
+   align-items: center;
+}
+
+#do-confirm {
+   position: absolute;
+   width: 40%;
+   height: 5vh;
+   padding: 2em;
+   background: linear-gradient(to right, rgba(0, 136, 255, 0.465), rgba(217, 102, 255, 0.465));
+   -webkit-backdrop-filter: blur(10px);
+   backdrop-filter: blur(10px);
+   color: white;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   overflow: hidden; /* Ensures the line stays within bounds */
+   font-family: 'Poppins', sans-serif;
+   font-weight: 300;
+   border-radius: 1vw;
+ }
+
+ #do-confirm .frs-button {
+   display: flex;
+   flex-direction: row;
+   gap: 1vw;
+ }
+
+ #do-confirm .frs-button input {
+ font-weight: 500;
+ font-style: oblique;
+ padding: 0.4em;
+ border-radius: 0.5vw;
+ color: black;
+ }
+
+ #dc_green {
+   background-color: #5dfc5adb;
+ }
+
+ #dc_red {
+   background-color: #e93232de;  
+ }
+
+#dc_green:hover, #dc_red:hover {
+   cursor: pointer;
+}
