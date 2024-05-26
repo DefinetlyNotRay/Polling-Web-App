@@ -21,6 +21,8 @@ use Illuminate\Auth\Middleware\Authenticate;
         Route::get('/poll', [PageController::class, "user_showpoll"])->name('userpoll');
         Route::get("/", [PageController::class, "home"]);
         Route::post('/poll/vote/user', [PollController::class, 'voteUser']);
+        Route::post('/change/password',[PageController::class,'passwordChange']);
+        Route::get('/changepassword', [PageController::class, "changePassword"])->name('changepassword');
     });
 // Define a group for authenticated routes
     Route::middleware([Authenticate::class, CheckTokenExpiry::class, CheckIfAdmin::class])->group(function () {
@@ -44,7 +46,5 @@ use Illuminate\Auth\Middleware\Authenticate;
     Route::get('/unauthenticated', function () {
         return redirect('/login');
     })->name('login');
-    Route::post('/change/password',[PageController::class,'passwordChange']);
-    Route::get('/changepassword', [PageController::class, "changePassword"])->name('changepassword');
     Route::get('/register', [PageController::class, "register"])->name('register');
     Route::post('/register/post', [PageController::class, "form_register"])->name('formregister');
