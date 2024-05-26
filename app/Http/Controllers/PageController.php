@@ -169,7 +169,7 @@ class PageController extends Controller
         ]);
 
         if($result) {
-            return redirect()->route('login');
+            return redirect()->route('login')->with('success', 'Account created.');
         }
     }
 
@@ -328,7 +328,7 @@ class PageController extends Controller
         }
     }
         // Redirect back with success message
-        return redirect("/admin/poll");
+        return redirect("/admin/poll")->with('success', 'Poll successful created.');
     }
     
 

@@ -19,6 +19,7 @@
 </head>
 <script src="{{asset('n-js/poll.js')}}"></script>
 <body>
+    <!-- Confirm Alert -->
     <div id="modif-do-confirm">
         <div id="do-confirm">
             <span id="text-do-confirm">Test.</span>
@@ -29,6 +30,26 @@
           </div>
         </div>
 
+        @if(session('success'))
+        <div id="modif-do-alert">
+        <div id="do-alert">
+            <span>{{session('success')}}</span>
+            <div class="line"></div>
+          </div>
+        </div>
+          <script>
+            // Close the alert after the animation completes (5 seconds)
+            setTimeout(() => {
+              const alert = document.getElementById('do-alert');
+              const alert2 = document.getElementById('modif-do-alert');
+              alert.style.animation = 'fadeOut 1s forwards';
+              alert.addEventListener('animationend', () => {
+                alert.remove();
+                alert2.remove();
+              });
+            }, 3500);
+          </script>
+          @endif    
    <nav class="flex items-center justify-between py-5 bg-nav">
       <div class="flex items-center">
           <p class="ml-5">&nbsp;</p>
@@ -83,7 +104,7 @@
         
             <div class="flex-select-poll">
 
-                <input class="dot-poll" type="radio" name="vote" data-poll-id="{{$choice->poll_id}}" data-choice-id="{{$choice->id}}" required onclick="submitForm(this)" {{$pollData['hasVoted'] ? 'disabled' : ($pollData['deadlineOver'] ? 'disabled' : '')               }} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
+                <input class="dot-poll" type="radio" name="vote" data-poll-id="{{$choice->poll_id}}" data-choice-id="{{$choice->id}}" required onclick="toshowactions('This action will sent your option.', this, 3)" {{$pollData['hasVoted'] ? 'disabled' : ($pollData['deadlineOver'] ? 'disabled' : '')               }} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
                 <li class="list-none">{{ $choice->choice }}</li>
             </div>
               
@@ -131,8 +152,8 @@
    <div class="outlines">&nbsp;</div>
    <div class="con-info">
       <p>Change Password</p>
-      <div class="box-pass">
-        <a href="/changepassword">
+      <div class="box-pass" onclick="toshowactions('Did you want to change password?', this, 4)">
+        <a href="#">
             <p>Change</p>
             </a>
       </div>
@@ -140,8 +161,8 @@
    <div class="outlines">&nbsp;</div>
    <div class="con-info">
       <p>Logout</p>
-      <div class="box-pass box-pass-sec">
-        <a href="/logout">
+      <div class="box-pass box-pass-sec" onclick="toshowactions('Are you sure you want log out?', this, 5)">
+        <a href="#">
             <p>Logout</p>
          </a>      </div>
    </div>
@@ -195,9 +216,13 @@
                     /*
                     List number for doing actions depending where you on.
                     
-                    0 :: @Admin / Create a poll
+                    0 :: @Admin / Create a poll (before)
                     1 :: @Admin / Delete specific poll
-                    (soon)
+                    2 :: @Admin / Create a poll (after)
+                    3 :: @(A/U)  / Choose Option Poll (before)
+                    4 :: @(A/U) / Change Password
+                    5 :: @(A/U) / Logout
+
                     */
 
                     if(path_action == 0) {
@@ -208,6 +233,22 @@
                         var form = document.querySelector('form[action="/poll/delete/' + formId + '"]');
 
                         form.submit();
+                    }
+                    else if(path_action == 2) {
+                        var form = document.getElementById('createPollForm');
+
+                        form.submit();
+                    }
+                    else if(path_action == 3) {
+                        var radio = element;
+
+                        submitForm(radio);
+                    }
+                    else if(path_action == 4) {
+                        window.location = '{{route('changepassword')}}';
+                    }
+                    else if(path_action == 5) {
+                        window.location = '{{route('logout')}}';
                     }
                         //Prevent from duplicating actions
                         setTimeout(function() {

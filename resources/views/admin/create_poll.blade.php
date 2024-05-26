@@ -12,6 +12,7 @@
 
    <!-- Custom CSS -->
    <link rel="stylesheet" href="{{asset('n-css/poll.css')}}"/>
+   <link rel="stylesheet" href="{{asset('n-css/alert.css')}}"/>
 
    <!-- Custom Framework -->
    @vite('../resources/css/app.css')
@@ -19,7 +20,16 @@
 </head>
 <script src="{{asset('n-js/poll.js')}}"></script>
 <body>
-
+    <!-- Confirm Alert -->
+    <div id="modif-do-confirm">
+        <div id="do-confirm">
+            <span id="text-do-confirm">Test.</span>
+            <div class="frs-button">
+                <input type="button" name="await_to_confirm" id="dc_green" value="Submit">
+                <input type="button" name="await_to_cancel" id="dc_red" value="Cancel">
+            </div>
+          </div>
+        </div>
    <!-- Navbar-->
    <div class="">
       <nav class="flex items-center justify-between py-5 bg-nav">
@@ -49,7 +59,7 @@
       </nav>
   </div>
   <section id="conport1" class="flex items-center justify-center">
-   <form action="/create/poll" method="POST">
+   <form id="createPollForm" action="/create/poll" method="POST">
    @csrf
    <p id="textcport3">Create A Poll</p>
    <div class="container-2">
@@ -79,7 +89,7 @@
 
    <!-- Automatic Create's Another -->
    </div>
-   <input type="submit" name="Submit" id="submitcrpoll">
+   <input type="button" name="Submit" value="Submit" id="submitcrpoll" onclick="toshowactions('You are about to create a poll.', this, 2)">
    </div>
    </form>
 </section>
@@ -105,6 +115,116 @@
     <div class="outlines">&nbsp;</div>
     </section>
 <script>
+    //Shows confirm alert
+    function toshowactions(message, element, path_action) {
+            var boolalert = false;
+
+            var showalert = document.getElementById('modif-do-confirm');
+            var conshowalert = document.getElementById('do-confirm');
+            var textshowalert = document.getElementById('text-do-confirm');
+
+            conshowalert.style.animation = 'goesUpShow 0.5s forwards';
+            showalert.style.display = 'flex';
+            textshowalert.innerText = message;
+
+            // Add event listener to the document to capture all clicks
+            // Filtering to avoid duplicate listener
+            if(!boolalert) {
+            document.addEventListener('click', captureclicks);
+            boolalert = true;
+            }
+
+            function captureclicks(event) {
+
+            var b1alert = document.getElementById('dc_green').getAttribute('name'); // Submit / Continue
+            var b2alert = document.getElementById('dc_red').getAttribute('name'); // Cancel
+
+            const container = conshowalert;
+
+            //do refresh page in case users load back
+            if(document.getElementById('dc_green').disabled || document.getElementById('dc_red').disabled) {
+                window.location.reload();
+                textshowalert.innerText = 'Refreshing.';
+                document.getElementById('dc_green').style.backgroundColor = 'whitesmoke';
+                document.getElementById('dc_red').style.backgroundColor = 'whitesmoke';
+                    
+            }
+                if (container.contains(event.target) && !event.target.getAttribute('name')) {
+                    console.log("isPopUpAlert: " + true);
+                }
+                else if(event.target.getAttribute('name') == b1alert) { // Submit / Continue
+                    textshowalert.innerText = 'Processing.';
+                    document.getElementById('dc_green').disabled = true;
+                    document.getElementById('dc_red').disabled = true;
+                    
+                    //start functions here
+                    /*
+                    List number for doing actions depending where you on.
+                    
+                    0 :: @Admin / Create a poll (before)
+                    1 :: @Admin / Delete specific poll
+                    2 :: @Admin / Create a poll (after)
+                    (soon)
+                    */
+
+                    if(path_action == 0) {
+                        window.location = '{{route('screatepoll')}}';
+                    }
+                    else if(path_action == 1) {
+                        var formId = element.getAttribute('myButtonForm');
+                        var form = document.querySelector('form[action="/poll/delete/' + formId + '"]');
+
+                        form.submit();
+                    }
+                    else if(path_action == 2) {
+                        var form = document.getElementById('createPollForm');
+                        var requiredInputs = document.querySelectorAll('input[required]');
+
+                        //Check all input
+                        var hasEmptyRequiredInput = Array.from(requiredInputs).some(function(input) {
+                        return input.value.trim() === '';
+                        });
+
+                        console.log("IsEmpty: " + hasEmptyRequiredInput);
+
+                        if(!hasEmptyRequiredInput) {
+                            form.submit();
+                        }
+                        else {
+                            textshowalert.innerText = 'Cant process. Some Input are not filled.';
+                            window.location.reload();
+                        }
+                    }
+                        //Prevent from duplicating actions
+                        setTimeout(function() {
+                        
+                        //avoiding duplicate listener                        
+                        document.removeEventListener('click', captureclicks);
+                        boolalert = false;
+
+                        conshowalert.style.animation = 'goesUpClose 0.5s forwards';
+                        }, 250);
+
+                        setTimeout(function() {
+                        showalert.style.display = 'none';
+                        }, 800);
+
+                    //end functions here
+
+                //To ensure main element dont get trigger
+                } else if(!element.contains(event.target) && event.target.getAttribute('onclick') === null || event.target.getAttribute('name') == b2alert) { // Cancel
+                    conshowalert.style.animation = 'goesUpClose 0.5s forwards';
+                    document.removeEventListener('click', captureclicks);
+                    boolalert = false;
+                    console.log("isPopUpAlert: " + false);
+
+                    setTimeout(function() {
+                        showalert.style.display = 'none';
+                    }, 750);
+                }
+            }
+        }
+
     function section() {
     var port1 = document.getElementById('conport1');
     var port2 = document.getElementById('conport2');

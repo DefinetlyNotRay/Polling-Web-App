@@ -41,10 +41,9 @@ class LoginController extends Controller
             return $response;
         }
     
-        return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
-        ]);
+        return back()->with('error', 'The provided credentials do not match our records.');
     }
+
     public function indexRegister(Request $request)
 {
     $creds = $request->validate([
@@ -64,7 +63,7 @@ class LoginController extends Controller
     // Attempt to authenticate the user
     if (Auth::login($user)) {
         // Redirect to an appropriate page after successful authentication
-        return redirect('/')->withCookie(cookie('user_token', $user->api_token, 24 * 60));
+        return redirect('/')->withCookie(cookie('user_token', $user->api_token, 24 * 60))->with('success', 'Auto-Login Succeeded.');
     } else {
         // Handle authentication failure
         return redirect('/register')->with('error', 'Authentication failed.');
@@ -78,7 +77,12 @@ class LoginController extends Controller
     
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+
+        $dk = [
+            "error" => "You have been logged out.",
+            "islogout" => true,
+        ];
+        return redirect('/login')->with($dk);
     }
     public function regisAuth(){
         $user = User::latest()->first();

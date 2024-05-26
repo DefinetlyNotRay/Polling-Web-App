@@ -9,6 +9,14 @@
 
 </head>
 <body class=" bg-background-black h-screen flex justify-center items-center">
+    @if(session('error'))
+            <div id="modif-do-alert">
+            <div id="do-alert">
+                <span>{{session('error')}}</span>
+                <div class="line" style="background-color: #e93232"></div>
+              </div>
+            </div>
+    @endif
     <div class="flex flex-col justify-center items-start">
 
         <div class="flex flex-col gap-20 justify-center items-center ">

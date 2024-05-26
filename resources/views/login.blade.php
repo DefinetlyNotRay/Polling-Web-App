@@ -6,9 +6,35 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
     @vite('resources/css/app.css')
+    <link rel="stylesheet" href="{{asset('n-css/alert.css')}}">
 
 </head>
+
 <body class=" bg-background-black h-screen flex justify-center items-center">
+    @if(session('error'))
+    <div id="modif-do-alert">
+    <div id="do-alert">
+        <span>{{session('error')}}</span>
+        @if(session('islogout'))
+        <div class="line"></div>
+        @else
+        <div class="line" style="background-color: #e93232"></div>
+        @endif
+      </div>
+    </div>
+      <script>
+        // Close the alert after the animation completes (5 seconds)
+        setTimeout(() => {
+          const alert = document.getElementById('do-alert');
+          const alert2 = document.getElementById('modif-do-alert');
+          alert.style.animation = 'fadeOut 1s forwards';
+          alert.addEventListener('animationend', () => {
+            alert.remove();
+            alert2.remove();
+          });
+        }, 3500);
+      </script>
+      @endif
     <div class="flex flex-col justify-center items-start">
 
         <div class="flex flex-col gap-20 justify-center items-center ">

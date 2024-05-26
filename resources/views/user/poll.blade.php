@@ -12,6 +12,7 @@
 
    <!-- Custom CSS -->
    <link rel="stylesheet" href="{{asset('n-css/poll.css')}}"/>
+   <link rel="stylesheet" href="{{asset('n/css/alert.css')}}"/>
 
    <!-- Custom Framework -->
    @vite('resources/css/app.css')
@@ -21,6 +22,16 @@
 </head>
 <script src="{{asset('n-js/poll.js')}}"></script>
 <body>
+    <!-- Confirm Alert -->
+    <div id="modif-do-confirm">
+        <div id="do-confirm">
+            <span id="text-do-confirm">Test.</span>
+            <div class="frs-button">
+                <input type="button" name="await_to_confirm" id="dc_green" value="Submit">
+                <input type="button" name="await_to_cancel" id="dc_red" value="Cancel">
+            </div>
+          </div>
+        </div>
 
    <nav class="flex items-center justify-between py-5 bg-nav">
       <div class="flex items-center">
@@ -74,7 +85,7 @@
             <input type="hidden" name="choice_id" id="choice_id">
         
             <div class="flex-select-poll">
-                <input class="dot-poll" type="radio" name="vote" data-poll-id="{{$choice->poll_id}}" data-choice-id="{{$choice->id}}" required onclick="submitForm(this)" {{$pollData['hasVoted'] ? 'disabled' : ($pollData['deadlineOver'] ? 'disabled' : '')               }} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
+                <input class="dot-poll" type="radio" name="vote" data-poll-id="{{$choice->poll_id}}" data-choice-id="{{$choice->id}}" required onclick="toshowactions('This action will sent your option.', this, 3)" {{$pollData['hasVoted'] ? 'disabled' : ($pollData['deadlineOver'] ? 'disabled' : '')               }} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
                 <li class="list-none">{{ $choice->choice }}</li>
             </div>
               
@@ -115,28 +126,136 @@
    <div class="outlines">&nbsp;</div>
 
    <div class="con-info">
-      <p>Change Password</p>
-      <div class="box-pass">
-        <a href="/changepassword">
-         <p>Change</p>
-      </a>
-      </div>
-   </div>
-   <div class="outlines">&nbsp;</div>
-
-   <div class="con-info">
-      <p>Logout</p>
-      <div class="box-pass box-pass-sec">
-         <a href="/logout">
-            <p>Logout</p>
-         </a>
-      </div>
-   </div>
+    <p>Change Password</p>
+    <div class="box-pass" onclick="toshowactions('Did you want to change password?', this, 4)">
+      <a href="#">
+          <p>Change</p>
+          </a>
+    </div>
+ </div>
+ <div class="outlines">&nbsp;</div>
+ <div class="con-info">
+    <p>Logout</p>
+    <div class="box-pass box-pass-sec" onclick="toshowactions('Are you sure you want log out?', this, 5)">
+      <a href="#">
+          <p>Logout</p>
+       </a>      </div>
+ </div>
    <div class="outlines">&nbsp;</div>
 
    </section>
       <script src="{{asset('n-js/poll.js')}}"></script>
       <script>
+        //Shows confirm alert
+        function toshowactions(message, element, path_action) {
+            var boolalert = false;
+
+            var showalert = document.getElementById('modif-do-confirm');
+            var conshowalert = document.getElementById('do-confirm');
+            var textshowalert = document.getElementById('text-do-confirm');
+
+            conshowalert.style.animation = 'goesUpShow 0.5s forwards';
+            showalert.style.display = 'flex';
+            textshowalert.innerText = message;
+
+            // Add event listener to the document to capture all clicks
+            // Filtering to avoid duplicate listener
+            if(!boolalert) {
+            document.addEventListener('click', captureclicks);
+            boolalert = true;
+            }
+
+            function captureclicks(event) {
+
+            var b1alert = document.getElementById('dc_green').getAttribute('name'); // Submit / Continue
+            var b2alert = document.getElementById('dc_red').getAttribute('name'); // Cancel
+
+            const container = conshowalert;
+
+            //do refresh page in case users load back
+            if(document.getElementById('dc_green').disabled || document.getElementById('dc_red').disabled) {
+                window.location.reload();
+                textshowalert.innerText = 'Refreshing.';
+                document.getElementById('dc_green').style.backgroundColor = 'whitesmoke';
+                document.getElementById('dc_red').style.backgroundColor = 'whitesmoke';
+                    
+            }
+                if (container.contains(event.target) && !event.target.getAttribute('name')) {
+                    console.log("isPopUpAlert: " + true);
+                }
+                else if(event.target.getAttribute('name') == b1alert) { // Submit / Continue
+                    textshowalert.innerText = 'Processing.';
+                    document.getElementById('dc_green').disabled = true;
+                    document.getElementById('dc_red').disabled = true;
+                    
+                    //start functions here
+                    /*
+                    List number for doing actions depending where you on.
+                    
+                    0 :: @Admin / Create a poll (before)
+                    1 :: @Admin / Delete specific poll
+                    2 :: @Admin / Create a poll (after)
+                    3 :: @(A/U)  / Choose Option Poll (before)
+                    4 :: @(A/U) / Change Password
+                    5 :: @(A/U) / Logout
+
+                    */
+
+                    if(path_action == 0) {
+                        window.location = '{{route('screatepoll')}}';
+                    }
+                    else if(path_action == 1) {
+                        var formId = element.getAttribute('myButtonForm');
+                        var form = document.querySelector('form[action="/poll/delete/' + formId + '"]');
+
+                        form.submit();
+                    }
+                    else if(path_action == 2) {
+                        var form = document.getElementById('createPollForm');
+
+                        form.submit();
+                    }
+                    else if(path_action == 3) {
+                        var radio = element;
+
+                        submitForm(radio);
+                    }
+                    else if(path_action == 4) {
+                        window.location = '{{route('changepassword')}}';
+                    }
+                    else if(path_action == 5) {
+                        window.location = '{{route('logout')}}';
+                    }
+                        //Prevent from duplicating actions
+                        setTimeout(function() {
+                        
+                        //avoiding duplicate listener                        
+                        document.removeEventListener('click', captureclicks);
+                        boolalert = false;
+
+                        conshowalert.style.animation = 'goesUpClose 0.5s forwards';
+                        }, 250);
+
+                        setTimeout(function() {
+                        showalert.style.display = 'none';
+                        }, 800);
+
+                    //end functions here
+
+                //To ensure main element dont get trigger
+                } else if(!element.contains(event.target) && event.target.getAttribute('onclick') === null || event.target.getAttribute('name') == b2alert) { // Cancel
+                    conshowalert.style.animation = 'goesUpClose 0.5s forwards';
+                    document.removeEventListener('click', captureclicks);
+                    boolalert = false;
+                    console.log("isPopUpAlert: " + false);
+
+                    setTimeout(function() {
+                        showalert.style.display = 'none';
+                    }, 750);
+                }
+            }
+        }
+        
           function submitForm(radio) {
              // Get the data-poll-id of the selected radio button
           const pollId = radio.getAttribute("data-poll-id");

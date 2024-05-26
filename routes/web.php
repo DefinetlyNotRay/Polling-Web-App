@@ -45,6 +45,6 @@ use Illuminate\Auth\Middleware\Authenticate;
         return redirect('/login');
     })->name('login');
     Route::post('/change/password',[PageController::class,'passwordChange']);
-    Route::get('/changepassword', [PageController::class, "changePassword"]);
+    Route::get('/changepassword', [PageController::class, "changePassword"])->name('changepassword');
     Route::get('/register', [PageController::class, "register"])->name('register');
     Route::post('/register/post', [PageController::class, "form_register"])->name('formregister');

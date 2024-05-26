@@ -96,7 +96,7 @@ public function vote(Request $request){
         ]);
 
    
-    return redirect("/admin/poll");
+    return redirect("/admin/poll")->with('success', 'Your choose is submitted.');
 
 
 }
@@ -124,7 +124,7 @@ public function voteUser(Request $request){
     ]);
 
 
-return redirect("/poll");
+return redirect("/poll")->with('success', 'Your choose is submitted.');
 
 
 }
@@ -132,6 +132,6 @@ public function delete(int $id){
     Vote::where('poll_id',$id)->delete();
     Choice::where('poll_id', $id)->delete();
     Poll::where('id', $id)->delete();
-    return redirect("/admin/poll");
+    return redirect("/admin/poll")->with('success', 'Poll successful deleted.');
 }
 }
