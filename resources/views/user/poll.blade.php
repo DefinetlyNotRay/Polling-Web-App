@@ -33,6 +33,27 @@
           </div>
         </div>
 
+        @if(session('success'))
+        <div id="modif-do-alert">
+        <div id="do-alert">
+            <span>{{session('success')}}</span>
+            <div class="line"></div>
+          </div>
+        </div>
+          <script>
+            // Close the alert after the animation completes (5 seconds)
+            setTimeout(() => {
+              const alert = document.getElementById('do-alert');
+              const alert2 = document.getElementById('modif-do-alert');
+              alert.style.animation = 'fadeOut 1s forwards';
+              alert.addEventListener('animationend', () => {
+                alert.remove();
+                alert2.remove();
+              });
+            }, 3500);
+          </script>
+          @endif
+
    <nav class="flex items-center justify-between py-5 bg-nav">
       <div class="flex items-center">
           <p class="ml-5">&nbsp;</p>

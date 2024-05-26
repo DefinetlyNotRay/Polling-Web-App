@@ -17,6 +17,7 @@
               </div>
             </div>
     @endif
+
     <div class="flex flex-col justify-center items-start">
 
         <div class="flex flex-col gap-20 justify-center items-center ">
