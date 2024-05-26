@@ -74,33 +74,35 @@
     <div class="flex flex-col pt-[4rem] pl-36 " id="conport1">
         <div>
             <h1 class="mb-5 text-3xl font-bold text-white">{{ ucfirst($user->username) }}</h1>
-                <div class="flex gap-5 mb-5 mb-12">
-                    <div class="flex gap-2">
-                        <img src="{{ asset('assets/Rectangle 11.png') }}" alt=""> <p class="font-semibold text-white">Your Vote</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <img src="{{ asset('assets/Rectangle 12.png') }}" alt="">  <p class="font-semibold text-white">Opposing Vote</p>
-                    </div>
+            <div class="flex gap-5 mb-5 mb-12">
+                <div class="flex gap-2">
+                    <img src="{{ asset('assets/Rectangle 11.png') }}" alt=""> <p class="font-semibold text-white">Your Vote</p>
                 </div>
+                <div class="flex gap-2">
+                    <img src="{{ asset('assets/Rectangle 12.png') }}" alt="">  <p class="font-semibold text-white">Opposing Vote</p>
+                </div>
+            </div>
             @if(!empty($pollsData))
                 <h2 class="mb-4 text-3xl font-bold text-white">Votes</h2>
                 @foreach($pollsData as $pollData)
                     @php
                         // Initialize total division votes for the current poll
                         $totalDivisionVotes = 0;
-                        
+    
                         // Keep track of divisions that have voted for the current poll
                         $votedDivisions = [];
-                        
+    
                         // Iterate over choices to collect divisions that have voted
-                        foreach ($finalOverallVoteCount[$pollData['poll']->id] as $choiceId => $details) {
-                            foreach ($details['divisions'] as $division => $votes) {
-                                if (!in_array($division, $votedDivisions)) {
-                                    $votedDivisions[] = $division;
+                        if (isset($finalOverallVoteCount[$pollData['poll']->id])) {
+                            foreach ($finalOverallVoteCount[$pollData['poll']->id] as $choiceId => $details) {
+                                foreach ($details['divisions'] as $division => $votes) {
+                                    if (!in_array($division, $votedDivisions)) {
+                                        $votedDivisions[] = $division;
+                                    }
                                 }
                             }
                         }
-                        
+    
                         // Total division votes for the current poll
                         $totalDivisionVotes = count($votedDivisions);
                     @endphp
@@ -113,15 +115,12 @@
                             @php
                                 $details = $finalOverallVoteCount[$pollData['poll']->id][$choice->id] ?? null;
                                 $userDivision = auth()->user()->division->name;
-                                $isMajorityChoice = $details && isset($details['divisions'][$userDivision]) && $details['majority_choice'] === $choice->choice;
-                                $isOnlyUserDivision = $details && count($details['divisions']) === 1 && isset($details['divisions'][$userDivision]);
                                 $percentage = $details ? $details['percentage'] : 0;
                                 $isUserVote = $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id;
-
                             @endphp
     
                             <div class="poll">
-                                <p class="text-lg font-bold" style="color:{{ $isUserVote ? '#3BD138' : '#E93232' }}">{{ $choice->choice }}: {{ round($percentage) }}%</p>
+                                <p class="text-lg font-bold" style="color:{{ $isUserVote ? '#3BD138' : '#E93232' }}">{{ $choice->choice }}: {{ round($percentage, 2) }}%</p>
                                 <div class="progress-bar" style="width: 100%; background-color: #ccc;">
                                     <div class="h-8 mb-{{ $isUserVote ? '0' : '2' }}" style="width: {{ $percentage }}%; background-color: {{ $isUserVote ? '#3BD138' : '#E93232' }};">
                                         &nbsp;
@@ -139,7 +138,11 @@
             <p class="text-white">No polls found for this user.</p>
         @endif
     </div>
+<<<<<<< Updated upstream
 </div>
+=======
+    
+>>>>>>> Stashed changes
     <section id="conport2">
         <p class="username">Hello {{ucfirst(Auth()->user()->username)}}!</p>
         <div class="outlines">&nbsp;</div>

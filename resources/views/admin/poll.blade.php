@@ -93,8 +93,9 @@
    <div id="polls">
        <p>{{ $pollData['poll']->title }}</p>
        <p>Created by: {{ $pollData['poll']->user->username }} | Deadline: {{ $pollData['poll']->deadline }}</p>
-   
+
        <!-- for Selecting Polls -->
+<<<<<<< Updated upstream
        <div class="select-poll" >
           @foreach ($pollData['allChoices'] as $choice)
           <form id="vote-form" method="POST" action="/poll/vote/user">
@@ -112,35 +113,49 @@
 
               <div id="bar-select-poll" class="mt-2" style="display:{{$pollData['hasVoted'] ? 'flex': ($pollData['deadlineOver'] ? 'flex' : 'none')}} !important;" show-poll="{{$pollData['poll']->id}}">
                 @php
+=======
+       <div class="select-poll">
+           @foreach ($pollData['allChoices'] as $choice)
+           <form id="vote-form" method="POST" action="/poll/vote/user">
+               @csrf
+               <input type="hidden" name="poll_id" id="poll_id" value="{{ $pollData['poll']->id }}">
+               <input type="hidden" name="choice_id" id="choice_id" value="{{ $choice->id }}">
+           
+               <div class="flex-select-poll">
+                   <input class="dot-poll" type="radio" name="vote" data-poll-id="{{ $choice->poll_id }}" data-choice-id="{{ $choice->id }}" required onclick="submitForm(this)" {{$pollData['hasVoted'] ? 'disabled' : ($pollData['deadlineOver'] ? 'disabled' : '')}} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
+                   <li class="list-none">{{ $choice->choice }}</li>
+               </div>
+               
+               <!-- Render the progress bar based on the percentage -->
+               <div id="bar-select-poll" class="mt-2" style="display:{{$pollData['hasVoted'] ? 'flex': ($pollData['deadlineOver'] ? 'flex' : 'none')}} !important;" show-poll="{{ $pollData['poll']->id }}">
+                   @php
+>>>>>>> Stashed changes
                        $isUserVote = $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id;
                        $percentage = 0;
                        if (isset($finalOverallVoteCount[$pollData['poll']->id][$choice->id])) {
-                                $percentage = $finalOverallVoteCount[$pollData['poll']->id][$choice->id]['percentage'];
-                            }
-                  @endphp
-
-
-               <div class=" progress-bar" style="width: 100%; background-color: #ccc;">
-                  <div class="h-100 mb-{{ $isUserVote ? '0' : '2' }}" style=" width: {{ $percentage }}%; background-color: {{ $isUserVote ? '#3BD138' : '#E93232' }};">
-                     &nbsp;
-                  </div>
-                  
+                           $percentage = $finalOverallVoteCount[$pollData['poll']->id][$choice->id]['percentage'];
+                       }
+                   @endphp
+                   <div class="progress-bar" style="width: 100%; background-color: #ccc;">
+                       <div class="h-100 mb-{{ $isUserVote ? '0' : '2' }}" style="width: {{ $percentage }}%; background-color: {{ $isUserVote ? '#3BD138' : '#E93232' }};">
+                           &nbsp;
+                       </div>
+                   </div>
                </div>
-               
-            </form>
-         </div>
+           </form>
+           @endforeach
+       </div>
+       <div class="flex items-center justify-end">
+           <form method="get" action="/poll/delete/{{ $pollData['poll']->id }}">
+               @csrf
+               <button type="button" myButtonForm="{{ $pollData['poll']->id }}" class="bg-[#E93232] px-4 py-1 font-bold" onclick="toshowactions('This action will delete a poll.', this, 1)">Delete</button>
+           </form>
+       </div>
+       <div class="mt-3 outlines">&nbsp;</div>
+   </div>
 @endforeach
-</div>
-<div class="flex items-center justify-end">
-    <form method="get" action="/poll/delete/{{$pollData['poll']->id}}">
-        @csrf
-        <button type="button" myButtonForm="{{$pollData['poll']->id}}" class="bg-[#E93232] px-4 py-1 font-bold" onclick="toshowactions('This action will delete a poll.', this, 1)">Delete</button>
-    </form>
-</div>
 
-<div class="mt-3 outlines">&nbsp;</div>
-</div>
-@endforeach
+
 
 
 

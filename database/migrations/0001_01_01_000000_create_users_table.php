@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->timestamps();
             $table->unsignedBigInteger('division_id')->nullable();
             $table->foreign('division_id')->references('id')->on('divisions')->onDelete('set null');
+            $table->string('api_token');
+            $table->timestamps('token_expiry');
         });
     }
 
