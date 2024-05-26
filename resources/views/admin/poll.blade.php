@@ -95,25 +95,6 @@
        <p>Created by: {{ $pollData['poll']->user->username }} | Deadline: {{ $pollData['poll']->deadline }}</p>
 
        <!-- for Selecting Polls -->
-<<<<<<< Updated upstream
-       <div class="select-poll" >
-          @foreach ($pollData['allChoices'] as $choice)
-          <form id="vote-form" method="POST" action="/poll/vote/user">
-            @csrf
-            <input type="hidden" name="poll_id" id="poll_id">
-            <input type="hidden" name="choice_id" id="choice_id">
-        
-            <div class="flex-select-poll">
-
-                <input class="dot-poll" type="radio" name="vote" data-poll-id="{{$choice->poll_id}}" data-choice-id="{{$choice->id}}" required onclick="toshowactions('This action will sent your option.', this, 3)" {{$pollData['hasVoted'] ? 'disabled' : ($pollData['deadlineOver'] ? 'disabled' : '')               }} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
-                <li class="list-none">{{ $choice->choice }}</li>
-            </div>
-              
-              <!-- Render the progress bar based on the percentage -->
-
-              <div id="bar-select-poll" class="mt-2" style="display:{{$pollData['hasVoted'] ? 'flex': ($pollData['deadlineOver'] ? 'flex' : 'none')}} !important;" show-poll="{{$pollData['poll']->id}}">
-                @php
-=======
        <div class="select-poll">
            @foreach ($pollData['allChoices'] as $choice)
            <form id="vote-form" method="POST" action="/poll/vote/user">
@@ -129,7 +110,6 @@
                <!-- Render the progress bar based on the percentage -->
                <div id="bar-select-poll" class="mt-2" style="display:{{$pollData['hasVoted'] ? 'flex': ($pollData['deadlineOver'] ? 'flex' : 'none')}} !important;" show-poll="{{ $pollData['poll']->id }}">
                    @php
->>>>>>> Stashed changes
                        $isUserVote = $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id;
                        $percentage = 0;
                        if (isset($finalOverallVoteCount[$pollData['poll']->id][$choice->id])) {

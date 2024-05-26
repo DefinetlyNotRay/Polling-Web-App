@@ -134,11 +134,8 @@ public function delete(int $id){
     Choice::where('poll_id', $id)->delete();
     Poll::where('id', $id)->update(['deleted_at' => Carbon::now()]);
     Poll::where('id', $id)->delete();
-<<<<<<< Updated upstream
-    return redirect("/admin/poll")->with('success', 'Poll successful deleted.');
-=======
 
-    return redirect("/admin/poll");
->>>>>>> Stashed changes
+    return redirect("/admin/poll")->with('success', 'Poll successful deleted.');
+
 }
 }
