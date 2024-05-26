@@ -22,11 +22,7 @@ use Illuminate\Auth\Middleware\Authenticate;
         Route::get("/", [PageController::class, "home"]);
         Route::post('/poll/vote/user', [PollController::class, 'voteUser']);
         Route::post('/change/password',[PageController::class,'passwordChange']);
-<<<<<<< Updated upstream
         Route::get('/changepassword', [PageController::class, "changePassword"])->name('changepassword');
-=======
-        Route::get('/changepassword', [PageController::class, "changePassword"]);
->>>>>>> Stashed changes
     });
 // Define a group for authenticated routes
     Route::middleware([Authenticate::class, CheckTokenExpiry::class, CheckIfAdmin::class])->group(function () {
@@ -50,9 +46,5 @@ use Illuminate\Auth\Middleware\Authenticate;
     Route::get('/unauthenticated', function () {
         return redirect('/login');
     })->name('login');
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     Route::get('/register', [PageController::class, "register"])->name('register');
     Route::post('/register/post', [PageController::class, "form_register"])->name('formregister');

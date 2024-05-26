@@ -351,7 +351,7 @@ class PageController extends Controller
               // Old password matches, proceed to update the password
         $user->password = Hash::make($validate['newPassword']);
         $user->save();
-        return redirect('/home')->with('success', 'Password updated successfully.');
+        return redirect('/')->with('success', 'Password updated successfully.');
 
         }else {
             // Old password does not match, return with error

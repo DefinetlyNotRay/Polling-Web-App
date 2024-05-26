@@ -138,11 +138,7 @@
             <p class="text-white">No polls found for this user.</p>
         @endif
     </div>
-<<<<<<< Updated upstream
 </div>
-=======
-    
->>>>>>> Stashed changes
     <section id="conport2">
         <p class="username">Hello {{ucfirst(Auth()->user()->username)}}!</p>
         <div class="outlines">&nbsp;</div>
