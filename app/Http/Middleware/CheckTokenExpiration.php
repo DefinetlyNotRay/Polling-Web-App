@@ -28,7 +28,9 @@ class CheckTokenExpiration
                     // Token has expired, log out the user
                     Auth::logout();
                     Cache::forget('user_token_' . $user->id); // Remove token from cache
-                    return redirect()->route('login')->with('expired', 'Your session has expired. Please log in again.');
+
+		    $data = ['error' => 'Your session has expired. Please log in again.', 'islogout' => true];
+                    return redirect()->route('login')->with($data);
                 }
             }
         }

@@ -22,7 +22,8 @@ class CheckTokenExpiry
             $user->save(); // Save changes to the database
             Auth::logout();
             $request->session()->invalidate();
-            return redirect('/login')->with('error', 'Your session has expired. Please log in again.');
+	    $data = ['error' => 'Your session has expired. Please log in again.', 'islogout' => true];
+            return redirect('/login')->with($data);
         }
 
         return $next($request);
