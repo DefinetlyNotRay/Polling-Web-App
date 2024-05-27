@@ -125,7 +125,7 @@ public function voteUser(Request $request){
     ]);
 
 
-return redirect("/poll")->with('success', 'Your choose is submitted.');
+return redirect("/poll")->with('success', 'Your choice is submitted.');
 
 
 }
