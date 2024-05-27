@@ -28,7 +28,7 @@
     <div id="modif-do-alert">
     <div id="do-alert">
         <span>{{session('success')}}</span>
-        <div class="line"></div>
+        <div class="line" style="animation: moveLine 1.2s linear forwards"></div>
       </div>
     </div>
       <script>
@@ -41,7 +41,7 @@
             alert.remove();
             alert2.remove();
           });
-        }, 3500);
+        }, 1500);
       </script>
       @endif
     <div class="">
