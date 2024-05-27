@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Poll;
 use App\Models\Vote;
 use App\Models\Choice;
@@ -131,7 +132,10 @@ return redirect("/poll")->with('success', 'Your choose is submitted.');
 public function delete(int $id){
     Vote::where('poll_id',$id)->delete();
     Choice::where('poll_id', $id)->delete();
+    Poll::where('id', $id)->update(['deleted_at' => Carbon::now()]);
     Poll::where('id', $id)->delete();
+
     return redirect("/admin/poll")->with('success', 'Poll successful deleted.');
+
 }
 }

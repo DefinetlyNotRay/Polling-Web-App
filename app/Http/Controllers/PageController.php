@@ -20,11 +20,11 @@ class PageController extends Controller
         {
             $votes = Vote::with(['user.division', 'choice.poll'])->get();
             $overallVoteCount = [];
-        
+            
             foreach ($votes as $vote) {
                 $pollId = $vote->choice->poll_id;
                 $division = $vote->user->division->name;
-                $choice = $vote->choice->id; // Change to id instead of choice text
+                $choice = $vote->choice->id;
         
                 if (!isset($overallVoteCount[$pollId])) {
                     $overallVoteCount[$pollId] = ['totalVotes' => 0, 'choices' => []];
@@ -41,11 +41,11 @@ class PageController extends Controller
             }
         
             $finalOverallVoteCount = [];
-        
+            
             foreach ($overallVoteCount as $pollId => $data) {
                 foreach ($data['choices'] as $choiceId => $details) {
                     $divisionVotes = []; // Array to store votes for each choice within each division
-        
+                    
                     // Count votes for each choice within each division
                     foreach ($details['divisions'] as $division => $votes) {
                         if (!isset($divisionVotes[$choiceId])) {
@@ -53,7 +53,7 @@ class PageController extends Controller
                         }
                         $divisionVotes[$choiceId] += $votes;
                     }
-        
+                    
                     // Find the choice with the maximum votes across divisions
                     $maxVotes = 0;
                     $majorityChoice = null;
@@ -63,20 +63,21 @@ class PageController extends Controller
                             $majorityChoice = $choiceId;
                         }
                     }
-        
+                    
                     $percentage = ($maxVotes / $data['totalVotes']) * 100; // Calculate percentage based on maxVotes
                     $finalOverallVoteCount[$pollId][$choiceId] = [
                         'percentage' => $percentage,
                         'divisions' => $details['divisions'],
                         'count' => $maxVotes, // Store the count based on maxVotes
                         'majority_choice' => $majorityChoice, // Store the majority choice
-                        'votes' => $votes
+                        'votes' => $maxVotes // Store the maximum votes
                     ];
                 }
             }
         
             return $finalOverallVoteCount;
         }
+        
         
     public function home()
     {
@@ -350,7 +351,7 @@ class PageController extends Controller
               // Old password matches, proceed to update the password
         $user->password = Hash::make($validate['newPassword']);
         $user->save();
-        return redirect('/home')->with('success', 'Password updated successfully.');
+        return redirect('/')->with('success', 'Password updated successfully.');
 
         }else {
             // Old password does not match, return with error
