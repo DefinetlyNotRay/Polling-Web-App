@@ -14,8 +14,8 @@ class LoginController extends Controller
     public function index(Request $request)
     {
         $creds = $request->validate([
-            'username' => 'required',
-            'password' => 'required',
+            'username' => 'required|string',
+            'password' => 'required|string',
         ]);
     
         if (Auth::attempt($creds)) {
@@ -47,10 +47,20 @@ class LoginController extends Controller
     public function indexRegister(Request $request)
 {
     $creds = $request->validate([
-        'username' => 'required|unique:users',
+        'username' => 'required|string|unique:users',
         'password' => 'required|min:6',
         'division' => 'required',
     ]);
+
+    // Check if the username is a string (this is redundant since `string` validation is already done)
+    if (!is_string($creds['username'])) {
+        return redirect('/register')->with('error', 'Invalid username format.');
+    }
+
+    // Check if the username already exists
+    if (User::where('username', $request->input('username'))->exists()) {
+        return redirect('/register')->with('error', 'Username has already been taken.');
+    }
 
     // Create a new user
     $user = User::create([
@@ -61,10 +71,10 @@ class LoginController extends Controller
     ]);
 
     // Attempt to authenticate the user
-    if (Auth::login($user)) {
-        // Redirect to an appropriate page after successful authentication
+     if(Auth::login($user)) {
         return redirect('/')->withCookie(cookie('user_token', $user->api_token, 24 * 60))->with('success', 'Auto-Login Succeeded.');
-    } else {
+    }
+    else {
         // Handle authentication failure
         return redirect('/register')->with('error', 'Authentication failed.');
     }

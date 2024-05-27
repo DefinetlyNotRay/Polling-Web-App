@@ -120,7 +120,7 @@
                             @endphp
     
                             <div class="poll">
-                                <p class="text-lg font-bold" style="color:{{ $isUserVote ? '#3BD138' : '#E93232' }}">{{ $choice->choice }}: {{ round($percentage, 2) }}%</p>
+                                <p class="text-lg font-bold" style="color:{{ $isUserVote ? '#3BD138' : '#E93232' }}">{{ $choice->choice }}: {{ round($percentage) }}%</p>
                                 <div class="progress-bar" style="width: 100%; background-color: #ccc;">
                                     <div class="h-8 mb-{{ $isUserVote ? '0' : '2' }}" style="width: {{ $percentage }}%; background-color: {{ $isUserVote ? '#3BD138' : '#E93232' }};">
                                         &nbsp;

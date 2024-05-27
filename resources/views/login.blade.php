@@ -43,7 +43,7 @@
              @csrf
              <div class="flex flex-col w-96 ">
                  <label class="text-white text-2xl font-bold" for="">Username</label>
-                 <input type="text" class="px-2 py-1" name="username">
+                 <input type="text" class="px-2 py-1" name="username" oninput="validateInput(event)">
              </div>
              <div class="flex flex-col w-96 ">
                  <label class="text-white text-2xl font-bold" for="">Password</label>
@@ -57,4 +57,14 @@
          
     </div>
 </body>
+<script>
+         function validateInput(event) {
+            const input = event.target.value;
+            const regex = /^[a-zA-Z]*$/; // Allow only alphabetic characters
+            if (!regex.test(input)) {
+                event.target.value = input.slice(0, -1); // Remove the last character if it's not alphabetic
+            }
+        }
+
+</script>
 </html>

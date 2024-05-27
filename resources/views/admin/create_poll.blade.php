@@ -21,7 +21,7 @@
 <script src="{{asset('n-js/poll.js')}}"></script>
 <body>
     <!-- Confirm Alert -->
-    <div id="modif-do-confirm">
+    <div id="modif-do-confirm" style="z-index: 2;">
         <div id="do-confirm">
             <span id="text-do-confirm">Test.</span>
             <div class="frs-button">
@@ -70,7 +70,7 @@
    <input type="text" onchange="testInput(this)" name="title" required>
    <p>Poll Description</p>
 
-   <textarea style="height: 5em; color: black;" name="description"></textarea>
+   <textarea style="height: 5em; color: black;" name="description" onchange="testInput(this)"></textarea>
    <p>Poll Deadline</p>
    <input type="date" onchange="testInput(this)" name="deadline" required>
    <p>Poll Body</p>
@@ -78,12 +78,10 @@
     <div class="relative">
 
         <input type="text" onchange="testInput(this, false, 0, false)"  name="poll_body[]" placeholder="Write a option.." required>
-        <button style="" class="absolute  text-[#272525] right-5 top-2 text-xl">-</button>
     </div>
     <div class="relative">
 
         <input type="text" onchange="testInput(this, true, 1, false)"  name="poll_body[]" placeholder="Write a option.." required>
-        <button style="" class="absolute  text-[#272525] right-5 top-2 text-xl">-</button>
     </div>
   
 
@@ -97,24 +95,26 @@
     <p class="username">Hello {{ucfirst(Auth()->user()->username)}}!</p>
     <div class="outlines">&nbsp;</div>
     <div class="con-info">
-       <p>Change Password</p>
-       <div class="box-pass">
-        <a href="/changepassword">
+      <p>Change Password</p>
+      <div class="box-pass" onclick="toshowactions('Did you want to change password?', this, 4)">
+        <a href="#">
             <p>Change</p>
-        </a>
-       </div>
-    </div>
-    <div class="outlines">&nbsp;</div>
-    <div class="con-info">
-       <p>Logout</p>
-       <div class="box-pass box-pass-sec">
-        <a href="/logout">
+            </a>
+      </div>
+   </div>
+   <div class="outlines">&nbsp;</div>
+   <div class="con-info">
+      <p>Logout</p>
+      <div class="box-pass box-pass-sec" onclick="toshowactions('Are you sure you want log out?', this, 5)">
+        <a href="#">
             <p>Logout</p>
-         </a>       </div>
-    </div>
+         </a>      </div>
+   </div>
     <div class="outlines">&nbsp;</div>
     </section>
 <script>
+var tonumber = 0;
+
     //Shows confirm alert
     function toshowactions(message, element, path_action) {
             var boolalert = false;
@@ -164,7 +164,10 @@
                     0 :: @Admin / Create a poll (before)
                     1 :: @Admin / Delete specific poll
                     2 :: @Admin / Create a poll (after)
-                    (soon)
+                    3 :: @(A/U)  / Choose Option Poll (before)
+                    4 :: @(A/U) / Change Password
+                    5 :: @(A/U) / Logout
+
                     */
 
                     if(path_action == 0) {
@@ -194,6 +197,17 @@
                             textshowalert.innerText = 'Cant process. Some Input are not filled.';
                             window.location.reload();
                         }
+                    }
+                    else if(path_action == 3) {
+                        var radio = element;
+
+                        submitForm(radio);
+                    }
+                    else if(path_action == 4) {
+                        window.location = '{{route('changepassword')}}';
+                    }
+                    else if(path_action == 5) {
+                        window.location = '{{route('logout')}}';
                     }
                         //Prevent from duplicating actions
                         setTimeout(function() {
@@ -238,35 +252,41 @@
     }
 }
     function testInput(info, bool, number, isallowdelete) {
-    var pollbody = document.querySelectorAll('[name="poll_body"]');
+    var pollbody = document.querySelectorAll('[name="poll_body\\[\\]"]');
     
-    if (info.value.trim() !== '' && bool === true && number < 4) {
+    if (info.value.trim() !== '' && bool === true && number < 4 ) {
+        if(pollbody[0].value.trim() !== '' && pollbody[1].value.trim() !== '') {
             // Create a new input element
             const newInput = document.createElement('input');
             const newDiv = document.createElement('div');
             const newP = document.createElement('button');
             newP.className = 'absolute text-[#272525] right-5 top-2 text-xl';
+            newP.setAttribute('onclick', 'autodeleteinput(this)');
             newDiv.className = 'relative';
-            newP.innerText = '-'
-            newDiv.setAttribute('id', 'div1');
-            newP.setAttribute('id','p1');
+            newP.innerText = '-';
+	    newP.setAttribute('type', 'button');
             newInput.type = 'text';
             newInput.name = `poll_body[]`;
             newInput.className = 'inputforpoll';
             newInput.placeholder = 'Write an option..';
             newInput.required = false;
-            let tonumber = number + 1; // Increment number
+            tonumber = number == tonumber ? tonumber + 1 : number + 1; // Increment number
+            newDiv.setAttribute('id', 'div' + tonumber);
+            newP.setAttribute('id','p' + + tonumber);
+            //allowing deleting input tho
+            newInput.setAttribute('selective_deletes', tonumber);
+            newP.setAttribute('selective_deletes', tonumber);
+            newDiv.setAttribute('selective_deletes', tonumber);
+
             newInput.setAttribute('onchange', 'testInput(this, true, ' + tonumber +', true)');
             
             // Append the new input element to the form
             const form = document.getElementById('body_poll');
             form.appendChild(newDiv);
-            const div = document.getElementById('div1');
-
+            const div = document.getElementById('div' + tonumber);
             div.appendChild(newInput);
-
             div.appendChild(newP);
-
+        }
     } else if (isallowdelete === true && number >= 2) {
         pollbody.forEach(function(res) {
         // Check if the value is empty and if it's one of the dynamically created inputs
@@ -287,6 +307,44 @@
         }, 3000);
     }
 }
+
+function autodeleteinput(info) {
+    // Get the selective_deletes value of the clicked element
+    var id = info.getAttribute('selective_deletes');
+
+    // Select all elements with the same selective_deletes attribute value
+    var elementsToRemove = document.querySelectorAll('[selective_deletes="' + id + '"]');
+    
+    // Remove the elements
+    elementsToRemove.forEach(element => {
+        element.remove();
+    });
+
+    // Get all div.relative elements with the selective_deletes attribute
+    const relativeDivs = document.querySelectorAll('div.relative[selective_deletes]');
+
+    let conte = 2; // Initialize counter
+
+    // Iterate through each div.relative element and update selective_deletes attributes
+    relativeDivs.forEach(div => {
+        // Update the container's selective_deletes attribute
+        div.setAttribute('selective_deletes', conte);
+        div.id = 'div' + conte;
+
+        // Find all input and button elements within the div that have the selective_deletes attribute
+        const elementsToUpdate = div.querySelectorAll('[selective_deletes]');
+        elementsToUpdate.forEach(element => {
+            element.setAttribute('selective_deletes', conte);
+            if (element.tagName === 'INPUT') {
+                element.setAttribute('onchange', 'testInput(this, true, ' + conte + ', true)');
+            } else if (element.tagName === 'BUTTON') {
+                element.setAttribute('onclick', 'autodeleteinput(this)');
+            }
+        });
+        conte++;
+    });
+}
+
 </script>
 </body>
 </html>

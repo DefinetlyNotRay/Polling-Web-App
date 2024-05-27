@@ -12,7 +12,7 @@
 
    <!-- Custom CSS -->
    <link rel="stylesheet" href="{{asset('n-css/poll.css')}}"/>
-   <link rel="stylesheet" href="{{asset('n/css/alert.css')}}"/>
+   <link rel="stylesheet" href="{{asset('n-css/alert.css')}}"/>
 
    <!-- Custom Framework -->
    @vite('resources/css/app.css')

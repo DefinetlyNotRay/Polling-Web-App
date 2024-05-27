@@ -103,7 +103,7 @@
                <input type="hidden" name="choice_id" id="choice_id" value="{{ $choice->id }}">
            
                <div class="flex-select-poll">
-                   <input class="dot-poll" type="radio" name="vote" data-poll-id="{{ $choice->poll_id }}" data-choice-id="{{ $choice->id }}" required onclick="submitForm(this)" {{$pollData['hasVoted'] ? 'disabled' : ($pollData['deadlineOver'] ? 'disabled' : '')}} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
+                   <input class="dot-poll" type="radio" name="vote" data-poll-id="{{ $choice->poll_id }}" data-choice-id="{{ $choice->id }}" required onclick="toshowactions('This action will sent your option.', this, 3)" {{$pollData['hasVoted'] ? 'disabled' : ($pollData['deadlineOver'] ? 'disabled' : '')}} {{ $pollData['userVote'] && $choice->id === $pollData['userVote']->choice_id ? 'checked' : '' }}>
                    <li class="list-none">{{ $choice->choice }}</li>
                </div>
                

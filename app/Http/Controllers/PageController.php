@@ -152,25 +152,44 @@ class PageController extends Controller
     }
 
     public function form_register(Request $request) {
-        $check = $request->validate([
-            'username' => 'required',
+        if(empty($request->input('username'))) {
+            return back()->with('error', 'Authentication failed.');
+        }
+
+        $creds = $request->validate([
+            'username' => 'required|string',
             'password' => 'required',
             'division' => 'required',
         ]);
-
-        $username = $request->input('username');
-        $password = $request->input('password');
-        $division = $request->input('division');
-
-        $result = User::create([
-            'username' => $username,
-            'password' => $password,
+    
+        if(!$creds) {
+            return back()->with('error', 'Authentication failed.');   
+        }
+        // Check if the username is a string (this is redundant since `string` validation is already done)
+        if (!is_string($creds['username'])) {
+            return back()->with('error', 'Invalid username format.');
+        }
+    
+        // Check if the username already exists
+        if (User::where('username', $request->input('username'))->exists()) {
+            return back()->with('error', 'Username has already been taken.');
+        }
+    
+        // Create a new user
+        $user = User::create([
+            'username' => $creds['username'],
+            'password' => bcrypt($creds['password']),
+            'division_id' => $creds['division'],
             'role' => "user",
-            'division_id' => $division,
         ]);
-
-        if($result) {
-            return redirect()->route('login')->with('success', 'Account created.');
+    
+        // Attempt to authenticate the user
+         if($user) {
+            return redirect()->route('login')->with('error', 'Account Created. Please do login.');
+        }
+        else {
+            // Handle authentication failure
+            return back()->with('error', 'Authentication failed.');
         }
     }
 
