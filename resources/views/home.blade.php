@@ -36,12 +36,12 @@
         setTimeout(() => {
           const alert = document.getElementById('do-alert');
           const alert2 = document.getElementById('modif-do-alert');
-          alert.style.animation = 'fadeOut 1s forwards';
+          alert.style.animation = 'fadeOut 0.5s forwards';
           alert.addEventListener('animationend', () => {
             alert.remove();
             alert2.remove();
           });
-        }, 1500);
+        }, 1000);
       </script>
       @endif
     <div class="">
