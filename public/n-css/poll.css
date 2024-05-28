@@ -31,13 +31,17 @@ section {
 
 ::-webkit-scrollbar-thumb {
     width: 5px;
-    background: transparent;
+    border-radius: 10px;
+    background: white;
 }
 
 ::-webkit-scrollbar-track {
     width: 5px;
-
+    opacity: 0;
     background: transparent;
+}
+.hi {
+    overflow-x: none !important;
 }
 
 .outlines {
@@ -94,8 +98,10 @@ section {
     display: flex;
     flex-direction: column;
     gap: 2em;
-    height: 80vh;
-    overflow-y: auto;
+    overflow-y: hidden;
+}
+body {
+    overflow-x: hidden;
 }
 
 .do-flex {

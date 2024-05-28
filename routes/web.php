@@ -8,6 +8,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\PollController;
 use App\Http\Controllers\LoginController;
 use App\Http\Middleware\CheckTokenExpiry;
+use App\Http\Middleware\PreventBackHistory;
 use Illuminate\Auth\Middleware\Authenticate;
 
     // Define the routes
@@ -17,7 +18,7 @@ use Illuminate\Auth\Middleware\Authenticate;
     Route::get("/login", [PageController::class, "login"]);
     Route::get('/register', [PageController::class, "register"]);
 
-    Route::middleware([Authenticate::class, CheckTokenExpiry::class])->group(function () {
+    Route::middleware([Authenticate::class, CheckTokenExpiry::class,PreventBackHistory::class])->group(function () {
         Route::get('/poll', [PageController::class, "user_showpoll"])->name('userpoll');
         Route::get("/", [PageController::class, "home"]);
         Route::post('/poll/vote/user', [PollController::class, 'voteUser']);
