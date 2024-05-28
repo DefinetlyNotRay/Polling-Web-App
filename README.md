@@ -1,5 +1,11 @@
 # This is a polling web app
 
+## Credits
+- Backend: Edgar, Desta
+- Frontend: Edgar, Robert
+- Planning: Edgar, Surya
+- Testing: Iqbal
+
 ## Before Starting run (once)
 
 -   composer update
