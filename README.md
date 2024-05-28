@@ -17,17 +17,17 @@ Frontend:
 -   Register
 -   Home Page ✓
 -   Polls Page ✓
--   Create a Poll Page
--   User Settings Page
+-   Create a Poll Page ✓
+-   User Settings Page ✓
 
 Backend:
 
 -   Login ✓
--   Register
--   Polling System
--   Creating a Poll
+-   Register ✓
+-   Polling System ✓
+-   Creating a Poll ✓
 -   Counting votes ✓
--   Changing Password
+-   Changing Password ✓
 
 Planning:
 
@@ -42,4 +42,4 @@ Planning:
 -   Collaboration Diagram ✓
 
 Testing:
--   All of the functionality
+-   All of the functionality ✓
