@@ -346,7 +346,7 @@ class PageController extends Controller
                 'poll_id'=> $pollId
             ]);
         }
-    }
+    }   
         // Redirect back with success message
         return redirect("/admin/poll")->with('success', 'Poll successful created.');
     }
@@ -355,6 +355,7 @@ class PageController extends Controller
 
 
     public function admin_screatepoll() {
+        // return view
         return view("admin.create_poll");
     }
     public function changePassword(){
