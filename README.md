@@ -1,8 +1,9 @@
 # This is a polling web app
 
-## Before Starting run
+## Before Starting run (once)
 
 -   composer update
+-   npm install 
 
 ## For Running the App
 
