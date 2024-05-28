@@ -15,6 +15,36 @@
 <body class="bg-background-black">
     <!-- Confirm Alert -->
     
+    <div id="modif-do-confirm">
+        <div id="do-confirm">
+            <span id="text-do-confirm">Test.</span>
+            <div class="frs-button">
+                <input type="button" name="await_to_confirm" id="dc_green" value="Submit">
+                <input type="button" name="await_to_cancel" id="dc_red" value="Cancel">
+            </div>
+          </div>
+        </div>
+
+        @if(session('success'))
+        <div id="modif-do-alert">
+        <div id="do-alert">
+            <span>{{session('success')}}</span>
+            <div class="line" style="animation: moveLine 1s linear forwards;"></div>
+          </div>
+        </div>
+          <script>
+            // Close the alert after the animation completes (5 seconds)
+            setTimeout(() => {
+              const alert = document.getElementById('do-alert');
+              const alert2 = document.getElementById('modif-do-alert');
+              alert.style.animation = 'fadeOut 0.5s forwards';
+              alert.addEventListener('animationend', () => {
+                alert.remove();
+                alert2.remove();
+              });
+            }, 1500);
+          </script>
+          @endif
     <div class="hi">
         <nav class="flex items-center justify-between py-5 bg-nav">
             <div class="flex items-center">
