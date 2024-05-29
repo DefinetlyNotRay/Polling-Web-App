@@ -87,7 +87,7 @@
    <!-- Section Container -->
    <!-- View Polls -->
    <section id="conport1">
-   <p>Polls</p>
+   <p class="text-xl font-bold mb-5">Polls</p>
    <div id="list-polls">
    
    <!-- gw buatin design nya aja ya -->

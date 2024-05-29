@@ -195,8 +195,6 @@ class PageController extends Controller
 
     //Part of VGJR
     public function user_showpoll() {
-
-
         $finalOverallVoteCount = $this->countMajorityVotes();
         $user = auth()->user();
         
@@ -209,7 +207,7 @@ class PageController extends Controller
         foreach ($polls as $poll) {
             // Retrieve all choices for the poll
             $allChoices = $poll->choices;
-            
+    
             // Check if the user has voted on this poll
             $userVote = Vote::where("user_id", $user->id)->where("poll_id", $poll->id)->first();
     
@@ -223,7 +221,6 @@ class PageController extends Controller
             }
             $userVote = Vote::where("user_id", $user->id)->where("poll_id", $poll->id)->first();
 
-
     
             // Calculate total vote count for the poll
             $totalCount = 0;
@@ -231,15 +228,12 @@ class PageController extends Controller
                 foreach ($finalOverallVoteCount[$poll->id] as $choiceData) {
                     $totalCount += $choiceData['count'];
                 }
-                
-                $deadlineOver = false;
-                $deadline = Carbon::parse($poll->deadline);
+            }
+            $deadlineOver = false;
+            $deadline = Carbon::parse($poll->deadline);
 
-                if($deadline->isPast()) {
-                    $deadlineOver = true;
-                }
-                
-
+            if($deadline->isPast()) {
+                $deadlineOver = true;
             }
     
             // Add the poll data to the array
@@ -251,12 +245,13 @@ class PageController extends Controller
                 'totalCount' => $totalCount,
                 'hasVoted' => $userVote ? true : false,
                 'deadlineOver' => $deadlineOver
+
             ];
         }
     
         return view("user.poll", compact("pollsData", "user", "finalOverallVoteCount"));
     }
-
+    
     public function admin_showpoll()
     {
         $finalOverallVoteCount = $this->countMajorityVotes();
